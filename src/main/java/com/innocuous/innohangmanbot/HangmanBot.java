@@ -1,7 +1,6 @@
 package com.innocuous.innohangmanbot;
 
 import com.innocuous.dependencyinjection.*;
-import com.innocuous.innohangmanbot.services.InnoService;
 import com.innocuous.innologger.*;
 
 import java.util.Optional;
@@ -10,7 +9,7 @@ public class HangmanBot
 {
     public static void main(String[] args)
     {
-        Optional<HangmanBot> botInstance = null;
+        Optional<HangmanBot> botInstance = Optional.empty();
         try
         {
             botInstance = Optional.of(new HangmanBot());
@@ -21,6 +20,9 @@ public class HangmanBot
             {
                 botInstance.get().Shutdown();
             }
+            System.out.println("HangmanBot caught exception:");
+            System.out.println(ex);
+            throw ex;
         }
     }
 
@@ -36,7 +38,9 @@ public class HangmanBot
     public IServiceProvider BuildServiceCollection()
     {
         return new ServiceCollection()
-            .Build();
+                .AddSingletonService(InnoLoggerConfig.class)
+                .AddSingletonService(InnoLoggerService.class)
+                .Build();
     }
 
     public void Log(LogMessage message)

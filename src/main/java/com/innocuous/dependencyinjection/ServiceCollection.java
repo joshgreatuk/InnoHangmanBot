@@ -14,17 +14,17 @@ public class ServiceCollection
         return new ServiceProvider(_descriptors);
     }
 
-    public void AddSingletonService(Class<?> serviceClass)
-    { AddService(serviceClass, ServiceType.Singleton, Optional.empty(), Optional.empty()); }
-    public void AddSingletonService(Class<?> serviceClass, Function<IServiceProvider, Object> func)
-    { AddService(serviceClass, ServiceType.Singleton, Optional.of(func), Optional.empty()); }
-    public void AddSingletonService(Class<?> serviceClass, Object value)
-    { AddService(serviceClass, ServiceType.Singleton, Optional.empty(), Optional.of(value)); }
+    public ServiceCollection AddSingletonService(Class<?> serviceClass)
+    { AddService(serviceClass, ServiceType.Singleton, Optional.empty(), Optional.empty()); return this; }
+    public ServiceCollection AddSingletonService(Class<?> serviceClass, Function<IServiceProvider, Object> func)
+    { AddService(serviceClass, ServiceType.Singleton, Optional.of(func), Optional.empty()); return this; }
+    public ServiceCollection AddSingletonService(Class<?> serviceClass, Object value)
+    { AddService(serviceClass, ServiceType.Singleton, Optional.empty(), Optional.of(value)); return this; }
 
-    public void AddTransientService(Class<?> serviceClass)
-    { AddService(serviceClass, ServiceType.Transient, Optional.empty(), Optional.empty()); }
-    public void AddTransientService(Class<?> serviceClass, Function<IServiceProvider, Object> func)
-    { AddService(serviceClass, ServiceType.Transient, Optional.of(func), Optional.empty()); }
+    public ServiceCollection AddTransientService(Class<?> serviceClass)
+    { AddService(serviceClass, ServiceType.Transient, Optional.empty(), Optional.empty()); return this; }
+    public ServiceCollection AddTransientService(Class<?> serviceClass, Function<IServiceProvider, Object> func)
+    { AddService(serviceClass, ServiceType.Transient, Optional.of(func), Optional.empty()); return this; }
 
 
     private void AddService(Class<?> serviceClass, ServiceType serviceType, Optional<Function<IServiceProvider, Object>> func, Optional<Object> value)
@@ -32,4 +32,5 @@ public class ServiceCollection
         if (_descriptors.containsKey(serviceClass)) _descriptors.remove(serviceClass);
         _descriptors.put(serviceClass, new ServiceDescriptor(serviceClass, serviceType, func, value));
     }
+
 }

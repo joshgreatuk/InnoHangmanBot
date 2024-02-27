@@ -10,7 +10,7 @@ public class LogMessage
     public Optional<Exception> exception;
 
     public LogMessage(Object sender, String message)
-    { this(sender.getClass().getName(), message, LogSeverity.Info; }
+    { this(sender.getClass().getName(), message, LogSeverity.Info); }
     public LogMessage(String sender, String message)
     { this(sender, message, LogSeverity.Info); }
 

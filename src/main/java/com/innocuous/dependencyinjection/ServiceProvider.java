@@ -3,8 +3,10 @@ package com.innocuous.dependencyinjection;
 import kotlin.NotImplementedError;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 class ServiceProvider implements IServiceProvider
 {
@@ -27,10 +29,20 @@ class ServiceProvider implements IServiceProvider
 
         //serviceType must be Singleton
         if (descriptor.value.isEmpty())
-            descriptor.value = descriptor.valueFunc.isPresent()
+            descriptor.value = descriptor.valueFunc.isEmpty()
                     ? Optional.of((T)InstantiateService(serviceClass))
                     : Optional.of((T)descriptor.valueFunc.get().apply(this));
         return (T)descriptor.value.get();
+    }
+
+    public Object[] GetActiveServices()
+    {
+        ArrayList<Object> activeServices = new ArrayList<Object>();
+        activeServices.addAll(_descriptors.values().stream()
+                .filter(x -> x.value.isPresent())
+                .map(x -> x.value.get())
+                .toList());
+        return activeServices.toArray();
     }
 
     private <T> T InstantiateService(Class<?> serviceClass)

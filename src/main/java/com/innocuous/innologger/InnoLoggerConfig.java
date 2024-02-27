@@ -1,4 +1,10 @@
 package com.innocuous.innologger;
 
-public class InnoLoggerConfig {
+import com.innocuous.innoconfig.InnoConfigBase;
+
+public class InnoLoggerConfig extends InnoConfigBase
+{
+    public String GetConfigPath(){
+        return "Config/InnoLogger.json";
+    }
 }

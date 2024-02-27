@@ -5,4 +5,5 @@ import com.innocuous.dependencyinjection.exceptions.ServiceNotFoundException;
 public interface IServiceProvider
 {
     public <T> T GetService(Class<?> serviceClass);
+    public Object[] GetActiveServices();
 }
