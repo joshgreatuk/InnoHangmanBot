@@ -23,7 +23,7 @@ class ServiceProvider implements IServiceProvider
 
         ServiceDescriptor descriptor = _descriptors.get(serviceClass);
         if (descriptor.serviceType == ServiceType.Transient)
-            return descriptor.valueFunc.isPresent()
+            return descriptor.valueFunc.isEmpty()
                     ? (T)InstantiateService((serviceClass))
                     : (T)descriptor.valueFunc.get().apply(this);
 
@@ -65,8 +65,7 @@ class ServiceProvider implements IServiceProvider
         }
         catch (Exception ex)
         {
-            //TO-DO: Log ex
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 }

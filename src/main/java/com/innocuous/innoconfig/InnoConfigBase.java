@@ -6,6 +6,6 @@ public abstract class InnoConfigBase
 
     public InnoConfigBase()
     {
-
+        
     }
 }

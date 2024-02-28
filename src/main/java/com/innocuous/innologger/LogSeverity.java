@@ -5,20 +5,20 @@ import java.util.Optional;
 
 public enum LogSeverity
 {
-    Critical(0, Optional.of(Color.orange)),
-    Error(0, Optional.of(Color.red)),
+    Critical(0, Optional.of("\u001B[38;5;166m")),
+    Error(0, Optional.of("\u001B[1m")),
     Info(0, Optional.empty()),
-    Warning(1, Optional.of(Color.yellow)),
-    Debug(2, Optional.of(Color.lightGray)),
-    Verbose(3, Optional.of(Color.gray));
+    Warning(1, Optional.of("\u001B[3m")),
+    Debug(2, Optional.of("\u001B[38;5;250m")),
+    Verbose(3, Optional.of("\u001B[38;5;244m"));
 
 
     private final int value;
-    private final Color colour;
-    private LogSeverity(int value, Optional<Color> colour)
+    private final String ansiColour;
+    private LogSeverity(int value, Optional<String> colour)
     {
         this.value = value;
-        this.colour = colour.isPresent() ? colour.get() : Color.white;
+        this.ansiColour = colour.isPresent() ? colour.get() : "\u001B[37m";
     }
 
     public int getValue()
@@ -26,8 +26,8 @@ public enum LogSeverity
         return value;
     }
 
-    public Color getColour()
+    public String getColour()
     {
-        return colour;
+        return ansiColour;
     }
 }
