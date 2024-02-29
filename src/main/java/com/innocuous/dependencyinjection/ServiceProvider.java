@@ -1,11 +1,10 @@
 package com.innocuous.dependencyinjection;
 
-import kotlin.NotImplementedError;
+import com.innocuous.dependencyinjection.servicedata.ServiceDescriptor;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Optional;
+import java.lang.reflect.Parameter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class ServiceProvider implements IServiceProvider
@@ -17,9 +16,12 @@ class ServiceProvider implements IServiceProvider
 
     private final Hashtable<Class<?>, ServiceDescriptor> _descriptors;
 
+    @Override
     public <T> T GetService(Class<?> serviceClass)
     {
         if (!_descriptors.containsKey(serviceClass)) return null;
+
+        if (serviceClass == IServiceProvider.class || serviceClass == ServiceProvider.class) return (T)this;
 
         ServiceDescriptor descriptor = _descriptors.get(serviceClass);
         if (descriptor.serviceType == ServiceType.Transient)
@@ -30,22 +32,21 @@ class ServiceProvider implements IServiceProvider
         //serviceType must be Singleton
         if (descriptor.value.isEmpty())
             descriptor.value = descriptor.valueFunc.isEmpty()
-                    ? Optional.of((T)InstantiateService(serviceClass))
-                    : Optional.of((T)descriptor.valueFunc.get().apply(this));
+                    ? Optional.of(InstantiateService(serviceClass))
+                    : Optional.of(descriptor.valueFunc.get().apply(this));
         return (T)descriptor.value.get();
     }
 
-    public Object[] GetActiveServices()
+    @Override
+    public List<Object> GetActiveServices()
     {
-        ArrayList<Object> activeServices = new ArrayList<Object>();
-        activeServices.addAll(_descriptors.values().stream()
+        return _descriptors.values().stream()
                 .filter(x -> x.value.isPresent())
                 .map(x -> x.value.get())
-                .toList());
-        return activeServices.toArray();
+                .collect(Collectors.toList());
     }
 
-    private <T> T InstantiateService(Class<?> serviceClass)
+    private Object InstantiateService(Class<?> serviceClass)
     {
         Constructor[] constructors = serviceClass.getDeclaredConstructors();
 
@@ -56,12 +57,12 @@ class ServiceProvider implements IServiceProvider
 
         for (int i=0; i < paramTypes.length; i++)
         {
-            params[i] = (Object)GetService(paramTypes[i]);
+            params[i] = GetService(paramTypes[i]);
         }
 
         try
         {
-            return (T)constructor.newInstance(params);
+            return constructor.newInstance(params);
         }
         catch (Exception ex)
         {

@@ -1,9 +1,12 @@
-package com.innocuous.dependencyinjection;
+package com.innocuous.dependencyinjection.servicedata;
+
+import com.innocuous.dependencyinjection.IServiceProvider;
+import com.innocuous.dependencyinjection.ServiceType;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-class ServiceDescriptor
+public class ServiceDescriptor
 {
     public ServiceDescriptor(Class<?> referenceType, ServiceType type, Optional<Function<IServiceProvider, Object>> func, Optional<Object> value)
     {

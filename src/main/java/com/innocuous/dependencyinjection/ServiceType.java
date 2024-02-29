@@ -1,6 +1,6 @@
 package com.innocuous.dependencyinjection;
 
-enum ServiceType
+public enum ServiceType
 {
     Singleton,
     Transient

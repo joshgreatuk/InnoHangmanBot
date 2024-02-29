@@ -26,6 +26,6 @@ public class LogMessage
         this.sender = sender;
         this.message = message;
         this.severity = severity;
-        this.exception = Optional.of(exception);
+        this.exception = exception == null ? Optional.empty() : Optional.of(exception);
     }
 }

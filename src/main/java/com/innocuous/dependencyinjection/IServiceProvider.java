@@ -1,9 +1,9 @@
 package com.innocuous.dependencyinjection;
 
-import com.innocuous.dependencyinjection.exceptions.ServiceNotFoundException;
+import java.util.List;
 
 public interface IServiceProvider
 {
     public <T> T GetService(Class<?> serviceClass);
-    public Object[] GetActiveServices();
+    public List<Object> GetActiveServices();
 }
