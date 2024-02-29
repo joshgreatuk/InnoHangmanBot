@@ -36,19 +36,10 @@ public class InnoLoggerService
     {
         if (message.severity.getValue() > _config.logLevel.getValue()) return;
 
-        String formattedTime = messageTimeFormatter.format(LocalTime.now());
-        String parsedMessage = message.severity.getColour()
-                + "[" + ApplyPadding(message.severity.name(), _config.severityPadding) + "]"
-                + "[" + ApplyPadding(message.sender, _config.classPadding) + "]["
-                + formattedTime + "] "
-                + message.message
-                + (message.exception.isPresent() ? (" : " + message.exception.get()) : "")
-                + colourReset + "\n";
-
-        System.out.print(parsedMessage);
+        System.out.print(ParseLogMessage(message, true, true));
         try
         {
-            writer.write(parsedMessage);
+            writer.write(ParseLogMessage(message, false, _config.logFilePadding));
 
             if (message.exception.isPresent())
             {
@@ -58,6 +49,18 @@ public class InnoLoggerService
             writer.flush();
         }
         catch (Exception ex) { throw new RuntimeException(ex); }
+    }
+
+    public String ParseLogMessage(LogMessage message, Boolean useColours, Boolean usePadding)
+    {
+        String formattedTime = messageTimeFormatter.format(LocalTime.now());
+        return (useColours ? message.severity.getColour() : "")
+                + formattedTime
+                + " [" + (usePadding ? ApplyPadding(message.sender, _config.classPadding) : message.sender) + "]"
+                + "[" + (usePadding ? ApplyPadding(message.severity.name(), _config.severityPadding)  : message.severity.name()) + "] "
+                + message.message
+                + (message.exception.isPresent() ? (" : " + message.exception.get()) : "")
+                + (useColours ? colourReset : "") + "\n";
     }
 
     public void Shutdown()

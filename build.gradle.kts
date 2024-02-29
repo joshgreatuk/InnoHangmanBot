@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation("net.dv8tion:JDA:$jdaVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("ch.qos.logback:logback-classic:1.2.8")
 
 }
 

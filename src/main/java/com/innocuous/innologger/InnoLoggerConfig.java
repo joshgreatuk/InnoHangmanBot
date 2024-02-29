@@ -12,6 +12,8 @@ public class InnoLoggerConfig extends InnoConfigBase
 
     public LogSeverity logLevel = LogSeverity.Info;
 
+    public Boolean logFilePadding = false;
+
     public Integer severityPadding = 8;
     public Integer classPadding = 50;
 

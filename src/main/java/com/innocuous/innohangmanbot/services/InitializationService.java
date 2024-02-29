@@ -9,23 +9,24 @@ import com.innocuous.innologger.LogMessage;
 import com.innocuous.innologger.LogSeverity;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
 import java.util.Arrays;
 
-public class InitializationService extends ListenerAdapter
+public class InitializationService extends InnoService implements IJDAEventListener
 {
     private final IServiceProvider _services;
-    private final InnoLoggerService _logger;
 
     public InitializationService(IServiceProvider services, InnoLoggerService logger)
     {
+        super(logger);
         _services = services;
-        _logger = logger;
     }
 
-    @Override
+    @SubscribeEvent
     public void onReady(ReadyEvent event)
     {
+        _logger.Log(new LogMessage(this, "Service Initialization started"));
         for (Object service : _services.GetActiveServices())
         {
             if (!service.getClass().isAssignableFrom(IInitializable.class)) continue;
@@ -39,8 +40,9 @@ public class InitializationService extends ListenerAdapter
             }
             catch (Exception ex)
             {
-                _logger.Log(new LogMessage(initService, "Caught an exception during Initialization", LogSeverity.Error, ex));
+                _logger.Log(new LogMessage(initService, "Caught an exception during initialization", LogSeverity.Error, ex));
             }
         }
+        _logger.Log(new LogMessage(this, "Service initialization finished"));
     }
 }

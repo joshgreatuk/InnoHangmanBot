@@ -2,10 +2,17 @@ package com.innocuous.innohangmanbot;
 
 import com.innocuous.dependencyinjection.*;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
+import com.innocuous.innohangmanbot.services.IJDAEventListener;
 import com.innocuous.innohangmanbot.services.InitializationService;
+import com.innocuous.innohangmanbot.services.InnoLoggerDIBridge;
 import com.innocuous.innologger.*;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import org.apache.commons.collections4.Get;
 
+import java.util.List;
 import java.util.Optional;
 
 public class HangmanBot
@@ -34,7 +41,6 @@ public class HangmanBot
     private final IServiceProvider _services;
     private final HangmanBotConfig _config;
     private final InnoLoggerService _logger;
-    private final JDABuilder _client;
 
     public HangmanBot()
     {
@@ -42,19 +48,24 @@ public class HangmanBot
         _config = _services.GetService(HangmanBotConfig.class);
         _config.Init();
         _logger = _services.GetService(InnoLoggerService.class);
-        _client = _services.GetService(JDABuilder.class);
+        JDABuilder client = _services.GetService(JDABuilder.class);
 
         String botToken = _config.debugMode ? _config.debugBotToken : _config.releaseBotToken;
-        _client.setToken(botToken);
+        client.setToken(botToken);
 
         try
         {
-            _client.build();
+            //Add event listeners here
+            client.setEventManager(new AnnotatedEventManager());
+            List<Object> listenerServices = _services.<Object>GetServicesWithInterface(IJDAEventListener.class);
+            for (Object listener : listenerServices) { client.addEventListeners(listener); }
 
-            //Initialize services here
-            _client.addEventListeners(_services.GetService(InitializationService.class));
+            client.setStatus(OnlineStatus.ONLINE);
 
-            wait();
+            JDA instance = _services.GetService(JDA.class);
+            Log(new LogMessage(this, "Bot running"));
+
+            // wait();
         }
         catch (Exception ex)
         {
@@ -69,8 +80,14 @@ public class HangmanBot
                 .AddSingletonService(InnoLoggerConfig.class)
 
                 .AddSingletonService(InnoLoggerService.class)
-                .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
+                .AddSingletonService(InnoLoggerDIBridge.class)
 
+                .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
+                .AddSingletonService(JDA.class, x -> x.<JDABuilder>GetService(JDABuilder.class).build())
+
+                .AddSingletonService(InitializationService.class)
+
+                .AddLogConsumer(InnoLoggerDIBridge.class, "Log")
                 .Build();
     }
 
@@ -80,6 +97,20 @@ public class HangmanBot
     public void Shutdown()
     {
         _logger.Log(new LogMessage(this, "Starting shutdown"));
+
+        //Shutdown JDA
+        JDA instance = _services.<JDA>GetService(JDA.class);
+        instance.shutdown();
+        try
+        {
+            instance.awaitShutdown();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(new LogMessage(this, "JDA await shutdown failed, bot may not shutdown correctly!", LogSeverity.Critical, ex));
+        }
+
+        //Shutdown services
         for (Object service : _services.GetActiveServices())
         {
             if (!IStoppable.class.isAssignableFrom(service.getClass())) continue;
