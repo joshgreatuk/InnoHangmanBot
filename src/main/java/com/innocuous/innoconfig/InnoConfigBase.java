@@ -39,22 +39,15 @@ public abstract class InnoConfigBase implements IStoppable
         }
 
         //Load the file to a new object, grab fields and populate current class
+        Object dataObject = LoadFile();
+        Field[] dataFields = getClass().getFields();
         try
         {
-            byte[] jsonData = Files.readAllBytes(Paths.get(path));
-            ObjectMapper objectMapper = new ObjectMapper();
-            Object dataObject = objectMapper.readValue(jsonData, getClass());
-
-            Field[] dataFields = getClass().getFields();
-            for (Field field : dataFields)
-            {
+            for (Field field : dataFields) {
                 field.set(this, field.get(dataObject));
             }
         }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        catch (Exception ex) { throw new RuntimeException(ex); }
     }
 
     public void Shutdown()
@@ -85,6 +78,23 @@ public abstract class InnoConfigBase implements IStoppable
             FileWriter writer = new FileWriter(path);
             writer.write(jsonString);
             writer.close();
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public Object LoadFile()
+    {
+        String path = Path.get("") + "/" + GetConfigPath();
+        try
+        {
+            byte[] jsonData = Files.readAllBytes(Paths.get(path));
+            ObjectMapper objectMapper = new ObjectMapper();
+            Object dataObject = objectMapper.readValue(jsonData, getClass());
+
+            return dataObject;
         }
         catch (Exception ex)
         {

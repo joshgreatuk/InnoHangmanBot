@@ -88,8 +88,6 @@ public class HangmanBot
 
                 .AddSingletonService(InitializationService.class)
 
-                .AddSingletonService(ErrorThrower.class)
-
                 .AddLogConsumer(InnoLoggerDIBridge.class, "Log")
                 .Build();
     }

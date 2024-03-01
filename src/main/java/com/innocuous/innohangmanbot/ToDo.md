@@ -3,9 +3,9 @@
 - [x] InnoLogger
   - [x] Improve error logging
 - [x] InnoConfig
-  - [ ] Add Unit Tests
+  - [x] Add Unit Tests
 - [x] Dependency Injection + Service Locator Framework
-  - [ ] Add Unit Tests
+  - [x] Add Unit Tests
 - [ ] JDAInteractionSystem
   - [ ] InteractionConfig
   - [ ] InteractionService
@@ -20,11 +20,15 @@
     - [ ] Guild Permissions (Opt)
     - [ ] Preconditions (Opt)
     - [ ] Autocompletes (Opt)
+  - [ ] Add Unit Tests
 - [ ] DataSystem
   - [ ] DataProvider
     - [ ] FileProvider
     - [ ] SQLiteProvider
+  - [ ] Add Unit Tests
 - [ ] InnoHangmanBot
   - [ ] GameInstanceManager
+    - [ ] Add Unit Tests
   - [ ] HangmanService
+    - [ ] Add Unit Tests
   - [ ] Add Game Settings To Config
