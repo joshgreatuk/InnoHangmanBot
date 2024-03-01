@@ -8,11 +8,10 @@ import java.awt.*;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.rmi.server.ExportException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class InnoLoggerService
 {
@@ -32,6 +31,11 @@ public class InnoLoggerService
         SwitchLogFile();
     }
 
+    public void Log(@NotNull LogMessage message, @NotNull String bridge)
+    {
+        message.bridge = Optional.of(bridge);
+        Log(message);
+    }
     public void Log(@NotNull LogMessage message) //TO-DO: Add padding
     {
         if (message.severity.getValue() > _config.logLevel.getValue()) return;
@@ -56,7 +60,7 @@ public class InnoLoggerService
         String formattedTime = messageTimeFormatter.format(LocalTime.now());
         String colourString = message.severity.getColour();
         String logMessage = (useColours ? colourString : "")
-                + formattedTime + " " + getClass().getSimpleName()
+                + formattedTime + " " + getClass().getSimpleName() + (message.bridge.isPresent() ? "(" + message.bridge.get() + ")" : "")
                 + " [" + (usePadding ? ApplyPadding(message.sender, _config.classPadding) : message.sender) + "]"
                 + "[" + (usePadding ? ApplyPadding(message.severity.name(), _config.severityPadding)  : message.severity.name()) + "] "
                 + message.message

@@ -20,8 +20,7 @@ dependencies {
     implementation("net.dv8tion:JDA:$jdaVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("org.junit.jupiter:junit-jupiter:$jUnitVersion");
-
+    implementation("org.junit.jupiter:junit-jupiter:$jUnitVersion")
 }
 
 tasks.withType<JavaCompile> {

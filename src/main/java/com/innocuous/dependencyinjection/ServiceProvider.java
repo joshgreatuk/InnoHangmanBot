@@ -3,13 +3,13 @@ package com.innocuous.dependencyinjection;
 import com.innocuous.dependencyinjection.logging.LogMessage;
 import com.innocuous.dependencyinjection.logging.LogSeverity;
 import com.innocuous.dependencyinjection.servicedata.ServiceDescriptor;
-import org.apache.commons.collections4.Get;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
 
 class ServiceProvider implements IServiceProvider
 {
@@ -59,8 +59,19 @@ class ServiceProvider implements IServiceProvider
 
         if (!_descriptors.containsKey(serviceClass))
         {
-            Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found", LogSeverity.Warning));
-            return null;
+            Class<?> finalServiceClass = serviceClass;
+            Optional<ServiceDescriptor> subClassService = _descriptors.values().stream().filter(x -> x.referenceType.getSuperclass() == finalServiceClass).findFirst();
+            if (subClassService.isPresent())
+            {
+                Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found, using subclass '" + subClassService.get().referenceType.getName() + "'", LogSeverity.Debug));
+                serviceClass = subClassService.get().referenceType;
+            }
+
+            if (!_descriptors.containsKey(serviceClass))
+            {
+                Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found", LogSeverity.Warning));
+                return null;
+            }
         }
 
         ServiceDescriptor descriptor = _descriptors.get(serviceClass);
@@ -97,7 +108,8 @@ class ServiceProvider implements IServiceProvider
     public <T> List<T> GetServicesWithInterface(Class<?> interfaceClass)
     {
         return _descriptors.values().stream()
-                .filter(x -> Arrays.stream(x.referenceType.getInterfaces()).anyMatch(y -> y == interfaceClass))
+                .filter(x -> Arrays.stream(x.referenceType.getInterfaces()).anyMatch(y -> y == interfaceClass)
+                || Arrays.stream(x.referenceType.getSuperclass().getInterfaces()).anyMatch(y -> y == interfaceClass))
                 .map(x -> (T)GetService(x.referenceType))
                 .collect(Collectors.toList());
     }

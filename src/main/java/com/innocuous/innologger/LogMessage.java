@@ -8,6 +8,7 @@ public class LogMessage
     public String message;
     public LogSeverity severity;
     public Optional<Exception> exception;
+    public Optional<String> bridge = Optional.empty();
 
     public LogMessage(Object sender, String message)
     { this(sender.getClass().getName(), message, LogSeverity.Info); }

@@ -5,23 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/ServiceCollectionProviderTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/ITest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonServiceA.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonServiceB.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonTestService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/TestLogConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/TransientService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/TransientTestService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/innoconfig/InnoConfigBaseTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/innoconfig/TestConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/innohangmanbot/services/InnoLoggerDIBridgeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/DataService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/Database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDataProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDataService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDatabase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/logging/LogMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/logging/LogSeverity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/DataServiceInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InnoLoggerDSBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonSubService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonSuperService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/IServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/IServiceProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innoconfig/InnoConfigBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innoconfig/InnoConfigBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceProvider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBotConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/data/HangmanBotConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InnoLoggerDIBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InnoLoggerDIBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/LogMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/LogMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/ServiceCollectionProviderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/ServiceCollectionProviderTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonServiceA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/SingletonServiceA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/innocuous/innohangmanbot/services/InnoLoggerDIBridgeTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,9 +69,9 @@
       <list>
         <option value="package-info" />
         <option value="Enum" />
+        <option value="JUnit5 Test Class" />
         <option value="Interface" />
         <option value="Class" />
-        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -109,6 +115,7 @@
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/joahg/OneDrive/Documents/Elite Pixel Studios/Bots/InnoHangmanBot/src/main/java/com/innocuous/datasystem",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -117,6 +124,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\joahg\OneDrive\Documents\Elite Pixel Studios\Bots\InnoHangmanBot\src\main\java\com\innocuous\datasystem" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
@@ -126,7 +136,7 @@
       <recent name="com.innocuous.innoconfig" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.JUnit Tests">
+  <component name="RunManager" selected="JAR Application.Execute InnoHangmanBot-1.0-all.jar">
     <configuration name="Build InnoHangmanBot" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -261,6 +271,13 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="_descriptors.entrySet().toArray()[1]" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/InnoHangmanBot$InnoConfigBaseTest_saveFile.ic" NAME="InnoConfigBaseTest.saveFile Coverage Results" MODIFIED="1709299384903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

@@ -41,25 +41,28 @@ class ServiceCollectionProviderTest
         SingletonTestService testService = new SingletonTestService();
         collection.AddSingletonService(SingletonTestService.class, testService);
 
+
         assertEquals(3, ((Hashtable<Class<?>, ServiceDescriptor>)collectionDescriptors.get(collection))
                 .size());
         assertTrue(((Hashtable<Class<?>, ServiceDescriptor>)collectionDescriptors.get(collection))
                 .get(SingletonTestService.class).value.isPresent());
+
+        collection.AddSingletonService(SingletonSubService.class);
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     void addTransientService() throws IllegalAccessException
     {
         collection.AddTransientService(TransientService.class);
         collection.AddTransientService(TransientTestService.class, x -> new TransientTestService());
 
-        assertEquals(5, ((Hashtable<Class<?>, ServiceDescriptor>)collectionDescriptors.get(collection))
+        assertEquals(6, ((Hashtable<Class<?>, ServiceDescriptor>)collectionDescriptors.get(collection))
                 .size());
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     void addLogConsumer() throws NoSuchFieldException, IllegalAccessException
     {
         collection.AddSingletonService(TestLogConsumer.class);
@@ -76,7 +79,7 @@ class ServiceCollectionProviderTest
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void build() throws IllegalAccessException, NoSuchFieldException
     {
         //Ensure ServiceProvider is built correctly
@@ -95,7 +98,7 @@ class ServiceCollectionProviderTest
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void getService() throws MultipleFailuresError, IllegalAccessException, NoSuchFieldException
     {
         Hashtable<Class<?>, ServiceDescriptor> currentDescriptors =
@@ -119,6 +122,7 @@ class ServiceCollectionProviderTest
 
         assertAll(
                 () -> assertTrue(currentDescriptors.get(SingletonServiceA.class).value.isPresent()),
+                () -> assertNotNull(((SingletonServiceA)currentDescriptors.get(SingletonServiceA.class).value.get()).services),
                 () -> assertNotNull(((SingletonServiceA)currentDescriptors.get(SingletonServiceA.class).value.get()).dependency),
                 () -> assertTrue(currentDescriptors.get(SingletonServiceB.class).value.isPresent()),
                 () -> assertTrue(currentDescriptors.get(SingletonTestService.class).value.isPresent()),
@@ -128,7 +132,15 @@ class ServiceCollectionProviderTest
     }
 
     @Test
-    @Order(3)
+    @Order(5)
+    void getSubclassService()
+    {
+        //Only the SingletonSubClass is here, so it should return SingletonSubClass as SingletonSuperClass
+        assertNotNull(services.GetService(SingletonSuperService.class));
+    }
+
+    @Test
+    @Order(4)
     void getActiveServices()
     {
         List<Object> activeServices = services.GetActiveServices();
@@ -136,15 +148,16 @@ class ServiceCollectionProviderTest
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void getServicesWithInterface()
     {
-        List<ITest> interfacedServices = services.GetServicesWithInterface(ITest.class);
-        assertEquals(2, interfacedServices.size());
+        List<Object> interfacedServices = services.GetServicesWithInterface(ITest.class);
+        assertEquals(3, interfacedServices.size());
+        assertTrue(interfacedServices.stream().anyMatch(x -> x.getClass() == SingletonSubService.class));
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void testLogging()
     {
         TestLogConsumer logConsumer = services.GetService(TestLogConsumer.class);

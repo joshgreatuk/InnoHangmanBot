@@ -1,17 +1,15 @@
 package com.innocuous.innohangmanbot;
 
+import com.innocuous.datasystem.DataService;
 import com.innocuous.dependencyinjection.*;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
-import com.innocuous.innohangmanbot.services.ErrorThrower;
-import com.innocuous.innohangmanbot.services.IJDAEventListener;
-import com.innocuous.innohangmanbot.services.InitializationService;
-import com.innocuous.innohangmanbot.services.InnoLoggerDIBridge;
+import com.innocuous.innohangmanbot.data.HangmanBotConfig;
+import com.innocuous.innohangmanbot.services.*;
 import com.innocuous.innologger.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import org.apache.commons.collections4.Get;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +59,8 @@ public class HangmanBot
             List<Object> listenerServices = _services.<Object>GetServicesWithInterface(IJDAEventListener.class);
             for (Object listener : listenerServices) { client.addEventListeners(listener); }
 
+
+
             client.setStatus(OnlineStatus.ONLINE);
 
             JDA instance = _services.GetService(JDA.class);
@@ -83,10 +83,14 @@ public class HangmanBot
                 .AddSingletonService(InnoLoggerService.class)
                 .AddSingletonService(InnoLoggerDIBridge.class)
 
+                .AddSingletonService(DataService.class, x -> new DataService(y -> x.<InnoLoggerDSBridge>GetService(InnoLoggerDSBridge.class).Log(y)))
+                .AddSingletonService(InnoLoggerDSBridge.class)
+
                 .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
                 .AddSingletonService(JDA.class, x -> x.<JDABuilder>GetService(JDABuilder.class).build())
 
-                .AddSingletonService(InitializationService.class)
+                .AddTransientService(InitializationService.class)
+                .AddTransientService(DataServiceInitializer.class)
 
                 .AddLogConsumer(InnoLoggerDIBridge.class, "Log")
                 .Build();

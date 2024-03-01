@@ -3,9 +3,11 @@
 - [x] InnoLogger
   - [x] Improve error logging
 - [x] InnoConfig
-  - [x] Add Unit Tests
+  - [x] Unit Tests
 - [x] Dependency Injection + Service Locator Framework
-  - [x] Add Unit Tests
+  - [x] Unit Tests
+  - [x] Direct Subclass support in GetService
+  - [x] Direct Super support in GetServicesWithInterface
 - [ ] JDAInteractionSystem
   - [ ] InteractionConfig
   - [ ] InteractionService
@@ -20,15 +22,34 @@
     - [ ] Guild Permissions (Opt)
     - [ ] Preconditions (Opt)
     - [ ] Autocompletes (Opt)
-  - [ ] Add Unit Tests
+  - [ ] Unit Tests
 - [ ] DataSystem
+  - [ ] DataService
+  - [x] Database (abstract)
   - [ ] DataProvider
-    - [ ] FileProvider
+    - [ ] JSONProvider
+      - [ ] Unit Tests
     - [ ] SQLiteProvider
-  - [ ] Add Unit Tests
+      - [ ] Unit Tests
+  - [ ] Unit Tests
 - [ ] InnoHangmanBot
   - [ ] GameInstanceManager
-    - [ ] Add Unit Tests
+    - [ ] Unit Tests
   - [ ] HangmanService
-    - [ ] Add Unit Tests
+    - [ ] Unit Tests
   - [ ] Add Game Settings To Config
+- [ ] Error Handling
+  - [ ] ExceptionService
+    - [ ] Unit Tests
+  - [ ] InnoLogger
+  - [ ] InnoConfig
+  - [ ] DependencyInjection
+  - [ ] JDAInteractionSystem
+  - [ ] DataSystem
+  - [ ] InnoHangmanBot
+  - [ ] Error Unit Tests
+    - [ ] InnoConfig
+    - [ ] DependencyInjection
+    - [ ] JDAInteractionSystem
+    - [ ] DataSystem
+    - [ ] InnoHangmanBot
