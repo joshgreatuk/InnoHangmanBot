@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/logging/LogMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/logging/LogSeverity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/IJDAEventListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InnoLoggerDIBridge.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/IServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/IServiceProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InitializationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InitializationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/LogSeverity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/LogSeverity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +56,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />

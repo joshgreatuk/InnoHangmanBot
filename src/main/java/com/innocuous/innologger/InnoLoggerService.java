@@ -55,7 +55,7 @@ public class InnoLoggerService
     {
         String formattedTime = messageTimeFormatter.format(LocalTime.now());
         return (useColours ? message.severity.getColour() : "")
-                + formattedTime
+                + formattedTime + " " + getClass().getSimpleName()
                 + " [" + (usePadding ? ApplyPadding(message.sender, _config.classPadding) : message.sender) + "]"
                 + "[" + (usePadding ? ApplyPadding(message.severity.name(), _config.severityPadding)  : message.severity.name()) + "] "
                 + message.message

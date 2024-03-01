@@ -1,0 +1,28 @@
+# InnoHangmanBot To-Do
+- [x] Bot base
+- [x] InnoLogger
+  - [ ] Improve error logging
+- [x] InnoConfig
+- [x] Dependency Injection + Service Locator Framework
+- [ ] JDAInteractionSystem
+  - [ ] InteractionConfig
+  - [ ] InteractionService
+  - [ ] Interaction Registration
+  - [ ] ModuleDefinition
+  - [ ] Nested Interactions (sub-commands) (Want)
+  - [ ] DMs Support (Want)
+  - [ ] Annotations
+    - [ ] Slash Commands
+    - [ ] Text Commands
+    - [ ] Component Interactions
+    - [ ] Guild Permissions (Opt)
+    - [ ] Preconditions (Opt)
+    - [ ] Autocompletes (Opt)
+- [ ] DataSystem
+  - [ ] DataProvider
+    - [ ] FileProvider
+    - [ ] SQLiteProvider
+- [ ] InnoHangmanBot
+  - [ ] GameInstanceManager
+  - [ ] HangmanService
+  - [ ] Add Game Settings To Config
