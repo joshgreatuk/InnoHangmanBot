@@ -3,7 +3,9 @@
 - [x] InnoLogger
   - [x] Improve error logging
 - [x] InnoConfig
+  - [ ] Add Unit Tests
 - [x] Dependency Injection + Service Locator Framework
+  - [ ] Add Unit Tests
 - [ ] JDAInteractionSystem
   - [ ] InteractionConfig
   - [ ] InteractionService
