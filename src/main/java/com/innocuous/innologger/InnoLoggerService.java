@@ -54,13 +54,24 @@ public class InnoLoggerService
     public String ParseLogMessage(LogMessage message, Boolean useColours, Boolean usePadding)
     {
         String formattedTime = messageTimeFormatter.format(LocalTime.now());
-        return (useColours ? message.severity.getColour() : "")
+        String colourString = message.severity.getColour();
+        String logMessage = (useColours ? colourString : "")
                 + formattedTime + " " + getClass().getSimpleName()
                 + " [" + (usePadding ? ApplyPadding(message.sender, _config.classPadding) : message.sender) + "]"
                 + "[" + (usePadding ? ApplyPadding(message.severity.name(), _config.severityPadding)  : message.severity.name()) + "] "
                 + message.message
                 + (message.exception.isPresent() ? (" : " + message.exception.get()) : "")
                 + (useColours ? colourReset : "") + "\n";
+
+        if (message.exception.isEmpty()) return logMessage;
+
+        StackTraceElement[] stackTrace = message.exception.get().getStackTrace();
+        for (StackTraceElement element : stackTrace)
+        {
+            logMessage += (useColours ? colourString : "") + "\t" + element.toString() + (useColours ? colourReset : "") + "\n";
+        }
+
+        return logMessage;
     }
 
     public void Shutdown()

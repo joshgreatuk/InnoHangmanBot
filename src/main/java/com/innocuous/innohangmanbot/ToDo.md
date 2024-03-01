@@ -1,7 +1,7 @@
 # InnoHangmanBot To-Do
 - [x] Bot base
 - [x] InnoLogger
-  - [ ] Improve error logging
+  - [x] Improve error logging
 - [x] InnoConfig
 - [x] Dependency Injection + Service Locator Framework
 - [ ] JDAInteractionSystem

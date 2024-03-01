@@ -2,6 +2,7 @@ package com.innocuous.innohangmanbot;
 
 import com.innocuous.dependencyinjection.*;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
+import com.innocuous.innohangmanbot.services.ErrorThrower;
 import com.innocuous.innohangmanbot.services.IJDAEventListener;
 import com.innocuous.innohangmanbot.services.InitializationService;
 import com.innocuous.innohangmanbot.services.InnoLoggerDIBridge;
@@ -86,6 +87,8 @@ public class HangmanBot
                 .AddSingletonService(JDA.class, x -> x.<JDABuilder>GetService(JDABuilder.class).build())
 
                 .AddSingletonService(InitializationService.class)
+
+                .AddSingletonService(ErrorThrower.class)
 
                 .AddLogConsumer(InnoLoggerDIBridge.class, "Log")
                 .Build();

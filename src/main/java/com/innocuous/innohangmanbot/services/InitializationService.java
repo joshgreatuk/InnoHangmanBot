@@ -27,11 +27,8 @@ public class InitializationService extends InnoService implements IJDAEventListe
     public void onReady(ReadyEvent event)
     {
         _logger.Log(new LogMessage(this, "Service Initialization started"));
-        for (Object service : _services.GetActiveServices())
+        for (IInitializable initService : _services.<IInitializable>GetServicesWithInterface(IInitializable.class))
         {
-            if (!service.getClass().isAssignableFrom(IInitializable.class)) continue;
-            IInitializable initService = (IInitializable)service;
-
             _logger.Log(new LogMessage(initService, "Initializing service", LogSeverity.Debug));
 
             try
