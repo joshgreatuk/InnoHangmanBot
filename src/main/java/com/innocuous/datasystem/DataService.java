@@ -28,4 +28,14 @@ public class DataService implements IDataService
         if (_logConsumer == null || _logConsumer.isEmpty()) return;
         _logConsumer.get().accept(message);
     }
+
+    @Override
+    public void RegisterDatabase(Database<?, ?> database) {
+
+    }
+
+    @Override
+    public void RegisterDataProvider(IDataProvider provider) {
+
+    }
 }

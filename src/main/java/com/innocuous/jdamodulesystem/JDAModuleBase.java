@@ -1,6 +1,6 @@
 package com.innocuous.jdamodulesystem;
 
-public class ModuleService
+public class JDAModuleBase
 {
 
 }

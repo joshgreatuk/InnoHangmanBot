@@ -15,22 +15,15 @@
   - [ ] ModuleDefinition
   - [ ] Nested Interactions (sub-commands) (Want)
   - [ ] DMs Support (Want)
+  - [ ] Modals Support (Opt)
   - [ ] Annotations
     - [ ] Slash Commands
     - [ ] Text Commands
+    - [ ] Context Commands
     - [ ] Component Interactions
     - [ ] Guild Permissions (Opt)
     - [ ] Preconditions (Opt)
     - [ ] Autocompletes (Opt)
-  - [ ] Unit Tests
-- [ ] DataSystem
-  - [ ] DataService
-  - [x] Database (abstract)
-  - [ ] DataProvider
-    - [ ] JSONProvider
-      - [ ] Unit Tests
-    - [ ] SQLiteProvider
-      - [ ] Unit Tests
   - [ ] Unit Tests
 - [ ] InnoHangmanBot
   - [ ] GameInstanceManager
@@ -53,3 +46,12 @@
     - [ ] JDAInteractionSystem
     - [ ] DataSystem
     - [ ] InnoHangmanBot
+- [ ] DataSystem (Want) (Use configs first)
+  - [ ] DataService
+  - [x] Database (abstract)
+  - [ ] DataProvider
+    - [ ] JSONProvider
+      - [ ] Unit Tests
+    - [ ] SQLiteProvider
+      - [ ] Unit Tests
+  - [ ] Unit Tests

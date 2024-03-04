@@ -10,5 +10,7 @@ package com.innocuous.datasystem;
  */
 public interface IDataService
 {
+    public void RegisterDatabase(Database<?, ?> database);
 
+    public void RegisterDataProvider(IDataProvider provider);
 }
