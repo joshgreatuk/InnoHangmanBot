@@ -5,15 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/JDAModuleBase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/DataNotes.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/providers/JSONDataProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/sql/SQLQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/sql/SQLResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/ILogger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/ModuleDescriptor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/DataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/DataService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDataProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/datasystem/IDataProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/IServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/IServiceProvider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/ModuleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,8 +62,9 @@
         <option value="package-info" />
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
-        <option value="Interface" />
+        <option value="Kotlin Class" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>

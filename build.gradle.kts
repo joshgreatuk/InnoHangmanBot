@@ -1,6 +1,7 @@
 plugins {
     application
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm")
 }
 
 application.mainClass = "com.innocuous.innohangmanbot.HangmanBot"
@@ -21,6 +22,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("org.junit.jupiter:junit-jupiter:$jUnitVersion")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.withType<JavaCompile> {
@@ -29,5 +31,7 @@ tasks.withType<JavaCompile> {
 
     // Set this to the version of java you want to use,
     // the minimum required for JDA is 1.8
-    sourceCompatibility = "17"
+}
+kotlin {
+    jvmToolchain(17)
 }

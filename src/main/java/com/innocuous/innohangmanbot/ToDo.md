@@ -12,9 +12,8 @@
   - [ ] InteractionConfig
   - [ ] InteractionService
   - [ ] Interaction Registration
-  - [ ] ModuleDefinition
-  - [ ] Nested Interactions (sub-commands) (Want)
-  - [ ] DMs Support (Want)
+  - [ ] ModuleDescriptor
+  - [ ] Nested Interactions (sub-commands / groups) 
   - [ ] Modals Support (Opt)
   - [ ] Annotations
     - [ ] Slash Commands

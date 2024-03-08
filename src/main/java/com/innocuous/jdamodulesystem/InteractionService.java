@@ -12,11 +12,28 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.Arrays;
+
 public class InteractionService extends ListenerAdapter
 {
     public InteractionService(JDABuilder jdaBuilder)
     {
         jdaBuilder.addEventListeners(this);
+    }
+
+    public void AddPackageModules(String javaPackage)
+    {
+        //Find classes assignable to type JDAModuleBase
+        //Recursively check internal classes for more annotations
+        //Check those class methods for command annotations
+        //Create ModuleDescriptor with commands registered
+        //Take note of group, add group name to commands, chain groups
+        Package targetPackage = ClassLoader.getSystemClassLoader().getDefinedPackage(javaPackage);
+
+        if (targetPackage == null)
+        {
+
+        }
     }
 
     @Override
