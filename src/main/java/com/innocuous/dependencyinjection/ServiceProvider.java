@@ -1,8 +1,11 @@
 package com.innocuous.dependencyinjection;
 
-import com.innocuous.dependencyinjection.logging.LogMessage;
-import com.innocuous.dependencyinjection.logging.LogSeverity;
 import com.innocuous.dependencyinjection.servicedata.ServiceDescriptor;
+import com.innocuous.innologger.ConsoleLogger;
+import com.innocuous.innologger.ILogger;
+import com.innocuous.innologger.LogMessage;
+import com.innocuous.innologger.LogSeverity;
+import org.apache.commons.collections4.Get;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -13,44 +16,23 @@ import java.util.stream.Collectors;
 
 class ServiceProvider implements IServiceProvider
 {
-    public ServiceProvider(Hashtable<Class<?>, ServiceDescriptor> descriptors, Optional<Class<?>> logConsumerClass, Optional<String> logMethodName)
+    public ServiceProvider(Hashtable<Class<?>, ServiceDescriptor> descriptors)
     {
         _descriptors = descriptors;
 
-        if (logConsumerClass.isEmpty() || logMethodName.isEmpty())
+        Optional<ILogger> logger = this.<ILogger>GetServicesWithInterface(ILogger.class).stream().findFirst();
+        if (logger.isEmpty())
         {
-            _logConsumer = Optional.empty();
-            _logConsumerObject = Optional.empty();
-            return;
+            logger = Optional.of(new ConsoleLogger());
+            logger.get().Log(new LogMessage(this, "No ILogger service found, using fallback logger of type '" + ConsoleLogger.class.getName() + "'"));
         }
+        _logger = logger.get();
 
-        try
-        {
-            Method logMethod = logConsumerClass.get().getMethod(logMethodName.get(), LogMessage.class);
-            _logConsumerObject = Optional.of(GetService(logConsumerClass.get()));
-            _logConsumer = Optional.of(x ->
-            {
-                try
-                {
-                    logMethod.invoke(_logConsumerObject.get(), x);
-                }
-                catch (Exception ex)
-                {
-                    throw new RuntimeException(ex);
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
-
-        Log(new LogMessage(this, "Descriptors and logger initialized"));
+        _logger.Log(new LogMessage(this, "Descriptors and logger initialized"));
     }
 
     private final Hashtable<Class<?>, ServiceDescriptor> _descriptors;
-    private final Optional<Consumer<LogMessage>> _logConsumer;
-    private final Optional<Object> _logConsumerObject;
+    private final ILogger _logger;
 
     @Override
     public <T> T GetService(Class<?> serviceClass)
@@ -59,12 +41,27 @@ class ServiceProvider implements IServiceProvider
 
         if (!_descriptors.containsKey(serviceClass))
         {
-            Class<?> finalServiceClass = serviceClass;
-            Optional<ServiceDescriptor> subClassService = _descriptors.values().stream().filter(x -> x.referenceType.getSuperclass() == finalServiceClass).findFirst();
-            if (subClassService.isPresent())
+            if (serviceClass.isInterface())
             {
-                Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found, using subclass '" + subClassService.get().referenceType.getName() + "'", LogSeverity.Debug));
-                serviceClass = subClassService.get().referenceType;
+                Class<?> finalServiceClass = serviceClass;
+                Optional<ServiceDescriptor> interfacedClass = _descriptors.values().stream().findFirst()
+                        .filter(x -> Arrays.stream(x.referenceType.getInterfaces()).anyMatch(y -> y == finalServiceClass)
+                        || Arrays.stream(x.referenceType.getSuperclass().getInterfaces()).anyMatch(y -> y == finalServiceClass));
+
+                if (interfacedClass.isPresent())
+                {
+                    Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found, using superclass '" + interfacedClass.get().referenceType.getName() + "'", LogSeverity.Debug));
+                    serviceClass = interfacedClass.get().referenceType;
+                }
+            }
+            else
+            {
+                Class<?> finalServiceClass = serviceClass;
+                Optional<ServiceDescriptor> subClassService = _descriptors.values().stream().filter(x -> x.referenceType.getSuperclass() == finalServiceClass).findFirst();
+                if (subClassService.isPresent()) {
+                    Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found, using subclass '" + subClassService.get().referenceType.getName() + "'", LogSeverity.Debug));
+                    serviceClass = subClassService.get().referenceType;
+                }
             }
 
             if (!_descriptors.containsKey(serviceClass))
@@ -109,7 +106,8 @@ class ServiceProvider implements IServiceProvider
     {
         return _descriptors.values().stream()
                 .filter(x -> Arrays.stream(x.referenceType.getInterfaces()).anyMatch(y -> y == interfaceClass)
-                || Arrays.stream(x.referenceType.getSuperclass().getInterfaces()).anyMatch(y -> y == interfaceClass))
+                || (x.referenceType.getSuperclass() != null
+                        && Arrays.stream(x.referenceType.getSuperclass().getInterfaces()).anyMatch(y -> y == interfaceClass)))
                 .map(x -> (T)GetService(x.referenceType))
                 .collect(Collectors.toList());
     }
@@ -127,8 +125,8 @@ class ServiceProvider implements IServiceProvider
         for (int i=0; i < paramTypes.length; i++)
         {
             params[i] = GetService(paramTypes[i]);
-            Log(new LogMessage(this, "Param type '" + paramTypes[i].getName() + "' for '" + serviceClass.getName() + "' value is '" + params[i] == null ? "null" : params[i].toString() + "'", LogSeverity.Verbose));
-            if (params[i] == null) Log(new LogMessage(this, "Param of type '" + paramTypes[i].getName() + "' for '" + serviceClass.getName() + "'s constructor value is null", LogSeverity.Warning));
+            Log(new LogMessage(this, "Param type '" + paramTypes[i].getName() + "' for '" + serviceClass.getName() + "' value is '" + (params[i] == null ? "null" : params[i].toString()) + "'", LogSeverity.Verbose));
+            if (params[i] == null) _logger.Log(new LogMessage(this, "Param of type '" + paramTypes[i].getName() + "' for '" + serviceClass.getName() + "'s constructor value is null", LogSeverity.Warning));
         }
 
         try
@@ -142,9 +140,9 @@ class ServiceProvider implements IServiceProvider
         }
     }
 
-    private void Log(LogMessage message)
+    public void Log(LogMessage message)
     {
-        if (_logConsumer == null || _logConsumer.isEmpty()) return;
-        _logConsumer.get().accept(message);
+        if (_logger == null) return;
+        _logger.Log(message);
     }
 }

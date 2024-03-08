@@ -62,23 +62,6 @@ class ServiceCollectionProviderTest
     }
 
     @Test
-    @Order(2)
-    void addLogConsumer() throws NoSuchFieldException, IllegalAccessException
-    {
-        collection.AddSingletonService(TestLogConsumer.class);
-        collection.AddLogConsumer(TestLogConsumer.class, "Log");
-
-        Field classField = collection.getClass().getDeclaredField("_logConsumerClass");
-        classField.setAccessible(true);
-        assertTrue(((Optional<Class<?>>)classField.get(collection))
-                .isPresent());
-        Field methodField = collection.getClass().getDeclaredField("_logConsumerMethod");
-        methodField.setAccessible(true);
-        assertTrue(((Optional<String>)methodField.get(collection))
-                .isPresent());
-    }
-
-    @Test
     @Order(3)
     void build() throws IllegalAccessException, NoSuchFieldException
     {
@@ -88,13 +71,6 @@ class ServiceCollectionProviderTest
         servicesDescriptors = services.getClass().getDeclaredField("_descriptors");
         servicesDescriptors.setAccessible(true);
         assertSame(collectionDescriptors.get(collection), servicesDescriptors.get(services));
-
-        Field consumerField = services.getClass().getDeclaredField("_logConsumer");
-        consumerField.setAccessible(true);
-        assertNotNull(consumerField.get(services));
-        Field objectField = services.getClass().getDeclaredField("_logConsumerObject");
-        objectField.setAccessible(true);
-        assertNotNull(objectField.get(services));
     }
 
     @Test
@@ -144,7 +120,7 @@ class ServiceCollectionProviderTest
     void getActiveServices()
     {
         List<Object> activeServices = services.GetActiveServices();
-        assertEquals(2, activeServices.size()); //SingletonTestService and TestLogConsumer
+        assertEquals(1, activeServices.size()); //SingletonTestService
     }
 
     @Test
@@ -154,17 +130,5 @@ class ServiceCollectionProviderTest
         List<Object> interfacedServices = services.GetServicesWithInterface(ITest.class);
         assertEquals(3, interfacedServices.size());
         assertTrue(interfacedServices.stream().anyMatch(x -> x.getClass() == SingletonSubService.class));
-    }
-
-    @Test
-    @Order(6)
-    void testLogging()
-    {
-        TestLogConsumer logConsumer = services.GetService(TestLogConsumer.class);
-        assertNotNull(logConsumer);
-
-        AtomicReference<Integer> logCount = new AtomicReference<>(0);
-        logConsumer.logCount.forEach((x, y) -> logCount.updateAndGet(v -> v + logConsumer.logCount.get(x)));
-        assert(logCount.get() > 5);
     }
 }

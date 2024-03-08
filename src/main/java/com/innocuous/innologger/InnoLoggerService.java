@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-public class InnoLoggerService
+public class InnoLoggerService implements ILogger
 {
     private final String colourReset = "\u001B[0m";
     private final InnoLoggerConfig _config;

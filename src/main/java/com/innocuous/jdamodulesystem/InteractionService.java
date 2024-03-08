@@ -32,7 +32,8 @@ public class InteractionService extends ListenerAdapter
 
         if (targetPackage == null)
         {
-
+            //Log
+            return;
         }
     }
 

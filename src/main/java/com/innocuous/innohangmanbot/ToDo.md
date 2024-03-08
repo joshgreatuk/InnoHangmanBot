@@ -2,12 +2,15 @@
 - [x] Bot base
 - [x] InnoLogger
   - [x] Improve error logging
+  - [x] Add ILogger
+  - [x] Add ConsoleLogger fallback
 - [x] InnoConfig
   - [x] Unit Tests
 - [x] Dependency Injection + Service Locator Framework
   - [x] Unit Tests
   - [x] Direct Subclass support in GetService
   - [x] Direct Super support in GetServicesWithInterface
+  - [x] Interface and super interface support in GetService
   - [ ] Add multi-constructor support (order by params, iterate till we can satisfy one constructor)
 - [ ] JDAInteractionSystem
   - [ ] InteractionConfig

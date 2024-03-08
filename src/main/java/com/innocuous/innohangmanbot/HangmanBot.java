@@ -81,10 +81,6 @@ public class HangmanBot
                 .AddSingletonService(InnoLoggerConfig.class)
 
                 .AddSingletonService(InnoLoggerService.class)
-                .AddSingletonService(InnoLoggerDIBridge.class)
-
-                .AddSingletonService(DataService.class, x -> new DataService(y -> x.<InnoLoggerDSBridge>GetService(InnoLoggerDSBridge.class).Log(y)))
-                .AddSingletonService(InnoLoggerDSBridge.class)
 
                 .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
                 .AddSingletonService(JDA.class, x -> x.<JDABuilder>GetService(JDABuilder.class).build())
@@ -92,7 +88,6 @@ public class HangmanBot
                 .AddTransientService(InitializationService.class)
                 .AddTransientService(DataServiceInitializer.class)
 
-                .AddLogConsumer(InnoLoggerDIBridge.class, "Log")
                 .Build();
     }
 
