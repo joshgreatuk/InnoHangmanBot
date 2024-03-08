@@ -8,6 +8,7 @@
   - [x] Unit Tests
   - [x] Direct Subclass support in GetService
   - [x] Direct Super support in GetServicesWithInterface
+  - [ ] Add multi-constructor support (order by params, iterate till we can satisfy one constructor)
 - [ ] JDAInteractionSystem
   - [ ] InteractionConfig
   - [ ] InteractionService

@@ -36,7 +36,7 @@ public class InnoLoggerService
         message.bridge = Optional.of(bridge);
         Log(message);
     }
-    public void Log(@NotNull LogMessage message) //TO-DO: Add padding
+    public void Log(@NotNull LogMessage message)
     {
         if (message.severity.getValue() > _config.logLevel.getValue()) return;
 
