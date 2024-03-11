@@ -25,6 +25,8 @@ class ServiceProvider implements IServiceProvider
         {
             logger = Optional.of(new ConsoleLogger());
             logger.get().Log(new LogMessage(this, "No ILogger service found, using fallback logger of type '" + ConsoleLogger.class.getName() + "'"));
+
+            _descriptors.put(ILogger.class, new ServiceDescriptor(ILogger.class, ServiceType.Singleton, Optional.empty(), Optional.of(logger.get())));
         }
         _logger = logger.get();
 

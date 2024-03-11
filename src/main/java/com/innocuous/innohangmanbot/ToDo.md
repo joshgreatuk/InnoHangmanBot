@@ -16,7 +16,8 @@
   - [ ] InteractionConfig
   - [ ] InteractionService
   - [ ] Interaction Registration
-  - [ ] ModuleDescriptor
+  - [x] ModuleDescriptor
+  - [x] Module Registration
   - [ ] Nested Interactions (sub-commands / groups) 
   - [ ] Modals Support (Opt)
   - [ ] Annotations
@@ -27,6 +28,7 @@
     - [ ] Guild Permissions (Opt)
     - [ ] Preconditions (Opt)
     - [ ] Autocompletes (Opt)
+    - [ ] TypeConverters (Opt)
   - [ ] Unit Tests
 - [ ] InnoHangmanBot
   - [ ] GameInstanceManager

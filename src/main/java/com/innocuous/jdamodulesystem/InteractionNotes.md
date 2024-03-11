@@ -28,6 +28,10 @@ commands to be grouped and prefix's to be standard, this will have nesting
 support, and its own preconditions, this means a whole group could
 have a precondition through just one annotation.
 
+Preconditions will still apply to classes without the @Group annotation and
+the annotation is limited to twice in a module hierarchy, although creating
+further nested module structures is still allowed
+
 ## Annotations
 Commands will be registered through annotations of methods, the annotations
 will include:
@@ -87,9 +91,23 @@ Options for method execution:
 ## InteractionConfig
 Config values we will need for the interaction system include:
 - Command Prefix
-- 
 
 ## Speed (Indexing)
 In the future we could use module indexing to index interactions so that
 the InteractionService only needs to check a HashTable for a string entry
 instead of searching through modules
+
+## Type Converters
+A type converter can turn any class used as a command paramter that wouldn't
+usually be supported to be turned into a class that is supported. For example,
+a base type converter is the EnumTypeConverter, since Enums wouldn't usually be
+supported, the type converter converts the Enum to a String value and then
+when given a String converts it back into an Enum to send as a parameter to
+the command. Base type converters include:
+- BaseTypeConverter<K, V>
+- StringTypeConverter(BaseTypeConverter<String,V>)<V>
+- NumberTypeConverter(BaseTypeConverter<Double,V>)<V>
+- IntegerTypeConverter(BaseTypeConverter<Integer,V>)<V>
+And implemented type converters include:
+- EnumTypeConverter(StringTypeConverter<Enum>)
+- FloatTypeConverter(NumberTypeConverter<Float>)

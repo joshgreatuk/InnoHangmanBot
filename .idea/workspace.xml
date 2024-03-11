@@ -5,19 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/annotations/Description.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/annotations/Group.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/annotations/SlashCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/data/SlashCommandDescriptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/jdamodulesystem/InteractionServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/jdamodulesystem/modules/TestModule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/ServiceProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/logging/LogMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/dependencyinjection/logging/LogSeverity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InnoLoggerDIBridge.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/InnoLoggerDSBridge.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/ModuleDescriptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/data/ModuleDescriptor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/ServiceCollectionProviderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/ServiceCollectionProviderTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/innocuous/dependencyinjection/tests/TestLogConsumer.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,10 +59,11 @@
       <list>
         <option value="package-info" />
         <option value="Enum" />
-        <option value="JUnit5 Test Class" />
         <option value="Kotlin Class" />
         <option value="Interface" />
+        <option value="JUnit5 Test Class" />
         <option value="Class" />
+        <option value="AnnotationType" />
       </list>
     </option>
   </component>
@@ -93,9 +94,9 @@
     "Gradle.InnoHangmanBot [shadowJar].executor": "Run",
     "Gradle.InnoHangmanBot [test].executor": "Run",
     "Gradle.InnoHangmanBot.executor": "Run",
-    "JAR Application.Execute InnoHangmanBot-1.0-all.jar.executor": "Run",
+    "JAR Application.Execute InnoHangmanBot-1.0-all.jar.executor": "Debug",
     "JAR Application.InnoHangmanBot-1.0-all.jar.executor": "Run",
-    "JUnit.JUnit Tests.executor": "Run",
+    "JUnit.JUnit Tests.executor": "Debug",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
@@ -122,6 +123,7 @@
       <recent name="" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.innocuous.jdamodulesystem" />
       <recent name="com.innocuous.innohangmanbot.services" />
       <recent name="com.innocuous.dependencyinjection" />
       <recent name="com.innocuous.innoconfig" />
@@ -270,11 +272,22 @@
           <properties class="java.lang.NullPointerException" package="java.lang" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/innocuous/jdamodulesystem/InteractionServiceTest.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.innocuous.jdamodulesystem.data.ModuleDescriptor" memberName="groupName" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="JUnit">
         <watch expression="_descriptors.entrySet().toArray()[1]" />
+        <watch expression="interactionService.modules.get(1).slashCommands" />
       </configuration>
     </watches-manager>
   </component>

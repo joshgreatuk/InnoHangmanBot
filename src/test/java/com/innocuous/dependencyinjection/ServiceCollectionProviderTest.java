@@ -120,7 +120,7 @@ class ServiceCollectionProviderTest
     void getActiveServices()
     {
         List<Object> activeServices = services.GetActiveServices();
-        assertEquals(1, activeServices.size()); //SingletonTestService
+        assertEquals(2, activeServices.size()); //SingletonTestService, ConsoleLogger
     }
 
     @Test
