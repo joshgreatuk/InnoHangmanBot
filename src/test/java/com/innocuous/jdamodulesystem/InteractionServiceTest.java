@@ -4,6 +4,7 @@ import com.innocuous.dependencyinjection.IServiceProvider;
 import com.innocuous.dependencyinjection.ServiceCollection;
 import com.innocuous.innologger.ILogger;
 import com.innocuous.innologger.LogMessage;
+import com.innocuous.jdamodulesystem.data.InteractionConfig;
 import com.innocuous.jdamodulesystem.modules.TestModule;
 import net.dv8tion.jda.api.JDABuilder;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ class InteractionServiceTest
     {
         services = new ServiceCollection()
                 .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
+                .AddSingletonService(InteractionConfig.class)
                 .AddSingletonService(InteractionService.class)
                 .Build();
         InteractionService interactionService = services.GetService(InteractionService.class);

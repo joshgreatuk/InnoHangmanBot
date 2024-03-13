@@ -6,6 +6,8 @@ import com.innocuous.dependencyinjection.servicedata.IStoppable;
 import com.innocuous.innohangmanbot.data.HangmanBotConfig;
 import com.innocuous.innohangmanbot.services.*;
 import com.innocuous.innologger.*;
+import com.innocuous.jdamodulesystem.InteractionService;
+import com.innocuous.jdamodulesystem.data.InteractionConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -57,9 +59,8 @@ public class HangmanBot
             //Add event listeners here
             client.setEventManager(new AnnotatedEventManager());
             List<Object> listenerServices = _services.<Object>GetServicesWithInterface(IJDAEventListener.class);
+            listenerServices.add(_services.GetService(InteractionService.class));
             for (Object listener : listenerServices) { client.addEventListeners(listener); }
-
-
 
             client.setStatus(OnlineStatus.ONLINE);
 
@@ -79,14 +80,18 @@ public class HangmanBot
         return new ServiceCollection()
                 .AddSingletonService(HangmanBotConfig.class)
                 .AddSingletonService(InnoLoggerConfig.class)
+                .AddSingletonService(InteractionConfig.class)
 
                 .AddSingletonService(InnoLoggerService.class)
 
                 .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
                 .AddSingletonService(JDA.class, x -> x.<JDABuilder>GetService(JDABuilder.class).build())
 
+                .AddSingletonService(InteractionService.class)
+
                 .AddTransientService(InitializationService.class)
-                .AddTransientService(DataServiceInitializer.class)
+                //.AddTransientService(DataServiceInitializer.class)
+                .AddTransientService(ModuleRegistrationService.class)
 
                 .Build();
     }

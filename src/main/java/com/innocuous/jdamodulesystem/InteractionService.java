@@ -1,11 +1,14 @@
 package com.innocuous.jdamodulesystem;
 
+import com.innocuous.dependencyinjection.IServiceProvider;
 import com.innocuous.innologger.ILogger;
+import com.innocuous.innologger.InnoLoggerService;
 import com.innocuous.innologger.LogMessage;
 import com.innocuous.innologger.LogSeverity;
 import com.innocuous.jdamodulesystem.annotations.Description;
 import com.innocuous.jdamodulesystem.annotations.Group;
 import com.innocuous.jdamodulesystem.annotations.SlashCommand;
+import com.innocuous.jdamodulesystem.data.InteractionConfig;
 import com.innocuous.jdamodulesystem.data.ModuleDescriptor;
 import com.innocuous.jdamodulesystem.data.SlashCommandDescriptor;
 import net.dv8tion.jda.api.JDA;
@@ -20,31 +23,42 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.apache.commons.collections4.Get;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class InteractionService extends ListenerAdapter
+public class InteractionService
 {
-    public InteractionService(ILogger logger, JDABuilder jdaBuilder)
+    public InteractionService(ILogger logger, InteractionConfig config, JDABuilder jdaBuilder, IServiceProvider services)
     {
         _logger = logger;
+        _config = (config == null ? new InteractionConfig() : config);
+        _config.Init();
+        _services = services;
 
         jdaBuilder.addEventListeners(this);
     }
 
     private final ILogger _logger;
+    private final InteractionConfig _config;
+    private final IServiceProvider _services;
     private JDA jda;
 
     private ArrayList<ModuleDescriptor> modules = new ArrayList<>();
+
+    public void AddModules(Collection<Class<?>> targetClasses)
+    {
+        for (Class<?> moduleClass : targetClasses) { AddModule(moduleClass); }
+    }
 
     public void AddModule(Class<?> targetClass)
     {
@@ -53,6 +67,10 @@ public class InteractionService extends ListenerAdapter
 
     private void AddModule(Class<?> targetClass, String groupName)
     {
+        List<String> groupsRaw = Arrays.stream(groupName.split("[ ]")).filter(x -> !x.isEmpty()).toList();
+        ArrayList<String> groups = new ArrayList<>(groupsRaw);
+        int groupNesting = groups.size();
+
         //If this class cant be assigned to a JDAModuleBase, skip it
         if (!JDAModuleBase.class.isAssignableFrom(targetClass))
         {
@@ -62,13 +80,23 @@ public class InteractionService extends ListenerAdapter
 
         //Check for class annotations (preconditions, groups)
         Group groupAnnotation = targetClass.getAnnotation(Group.class);
-        if (groupAnnotation != null)
+        String desc = "";
+        if (groupAnnotation != null && groupNesting < 2)
         {
-            groupName += " " + groupAnnotation.name();
-            groupName = groupName.trim();
+            groups.add(groupAnnotation.name().toLowerCase());
+            desc = groupAnnotation.description();
         }
 
-        ModuleDescriptor module = new ModuleDescriptor(targetClass, groupName);
+        ModuleDescriptor module = new ModuleDescriptor(targetClass);
+
+        if (groups.size() >= 1) module.subcommand = groups.get(0);
+        if (groups.size() == 1) module.subcommandDesc = desc;
+        if (groups.size() >= 2)
+        {
+            module.subcommandGroup = groups.get(1);
+            module.subcommandDesc = desc;
+        }
+
         modules.add(module);
 
         //Check methods for annotations (preconditions, commands)
@@ -79,17 +107,21 @@ public class InteractionService extends ListenerAdapter
             SlashCommand slashCommand = classMethod.getAnnotation(SlashCommand.class);
             OptionData[] options = GetSlashCommandOptionData(classMethod);
 
-            SlashCommandData commandData = Commands.slash(slashCommand.name(), slashCommand.description());
+            SlashCommandData commandData = Commands.slash(slashCommand.name().toLowerCase(), slashCommand.description());
             commandData.addOptions(options);
 
-            module.slashCommands.add(new SlashCommandDescriptor(commandData, classMethod));
+            module.slashCommands.put(((module.subcommand.isEmpty() ? "" : module.subcommand + " ")
+                    + (module.subcommandGroup.isEmpty() ? "" : module.subcommandGroup + " ")
+                    + commandData.getName()).trim(), new SlashCommandDescriptor(commandData, classMethod));
         }
 
         //Iterate through nested classes to AddModule
         for (Class<?> nestedClass : targetClass.getDeclaredClasses())
         {
-            AddModule(nestedClass, groupName);
+            AddModule(nestedClass, String.join(" ", groups));
         }
+
+        _logger.Log(new LogMessage(this, "Added module '" + targetClass.getName() + "'", LogSeverity.Debug));
     }
 
     private OptionData[] GetSlashCommandOptionData(Method targetMethod)
@@ -146,6 +178,7 @@ public class InteractionService extends ListenerAdapter
         }
 
         AddCommands(jda.updateCommands());
+        _logger.Log(new LogMessage(this, "Registered " + modules.size() + " modules globally"));
     }
 
     public void RegisterModulesToGuild(Long guildID)
@@ -159,63 +192,218 @@ public class InteractionService extends ListenerAdapter
             return;
         }
 
+        if (guildID == 0)
+        {
+            guildID = _config.autoRegisterGuild;
+            _logger.Log(new LogMessage(this, "RegisterModulesToGuild, GuildID was 0, using autoRegisterGuild"));
+        }
+
         AddCommands(jda.getGuildById(guildID).updateCommands());
+        _logger.Log(new LogMessage(this, "Registered " + modules.size() + " modules to guild"));
     }
 
     private void AddCommands(CommandListUpdateAction updateAction)
     {
         //Filter commands into no group (0 @Group), subcommands (1 @Group) and subgroup (2 @Group) subcommands
+        Hashtable<String, SlashCommandData> rootSlashCommands = new Hashtable<>();
+        Hashtable<String, SubcommandGroupData> subcommandGroups = new Hashtable<>();
+        modules.forEach(x ->
+                {
+                    //Add slash commands to queue
+                    if (!x.subcommand.isEmpty())
+                    {
+                        //Construct sub commands
+                        ArrayList<SubcommandData> subCommands = new ArrayList<>();
+                        for (SlashCommandDescriptor command : x.slashCommands.values())
+                        {;
+                            SubcommandData subCommand = new SubcommandData(command.data.getName(), command.data.getDescription());
+                            subCommand.addOptions(command.data.getOptions());
+                            subCommands.add(subCommand);
+                        }
 
+                        //There is atleast 1 @Group
+                        SlashCommandData parentCommand = rootSlashCommands.get(x.subcommand);
+                        if (parentCommand == null)
+                        {
+                            parentCommand = Commands.slash(x.subcommand, x.subcommandDesc);
+                            rootSlashCommands.put(x.subcommand, parentCommand);
+                        }
 
-        //Add commands
+                        if (!x.subcommandGroup.isEmpty())
+                        {
+                            //Add SubcommandGroup
+                            SubcommandGroupData groupData = subcommandGroups.get(x.subcommandGroup);
+                            if (groupData == null)
+                            {
+                                groupData = new SubcommandGroupData(x.subcommandGroup, x.subcommandGroupDesc);
+                                subcommandGroups.put(x.subcommandGroup, groupData);
+                                parentCommand.addSubcommandGroups(groupData);
+                            }
 
+                            groupData.addSubcommands(subCommands);
+                        }
+                        else
+                        {
+                            parentCommand.addSubcommands(subCommands);
+                        }
+                    }
+                    else
+                    {
+                        for (SlashCommandDescriptor command : x.slashCommands.values())
+                        {
+                            rootSlashCommands.put(command.data.getName(), command.data);
+                        }
+                    }
+                }
+        );
 
-        updateAction.queue();
+        //Add commands to queue and register
+        updateAction.addCommands(rootSlashCommands.values()).queue();
     }
 
-    @Override
+    @SubscribeEvent
     public void onReady(ReadyEvent event)
     {
         jda = event.getJDA();
+
+        if (_config.commandAutoRegister)
+        {
+            if (_config.autoRegisterGlobally)
+            {
+                RegisterModulesGlobally();
+            }
+            else if (_config.autoRegisterGuild != 0)
+            {
+                RegisterModulesToGuild(_config.autoRegisterGuild);
+            }
+            else
+            {
+                _logger.Log(new LogMessage(this, "autoRegisterGuild set to 0!", LogSeverity.Warning));
+            }
+        }
     }
 
-    @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        super.onSlashCommandInteraction(event);
+    public void setJDA(JDA jda)
+    {
+        this.jda = jda;
     }
 
-    @Override
+    @SubscribeEvent
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event)
+    {
+        //Find better way to traverse modules
+        String command = event.getFullCommandName();
+        Optional<ModuleDescriptor> targetModule = modules.stream().findFirst().filter(x -> x.slashCommands.containsKey(command));
+        if (targetModule.isEmpty())
+        {
+            throw new NullPointerException();
+        }
+
+        JDAModuleBase module = this.<JDAModuleBase>InstantiateModule(targetModule.get().moduleClass);
+        module.interaction = event.getInteraction();
+
+        SlashCommandDescriptor commandDescriptor = targetModule.get().slashCommands.get(command);
+
+        //Get parameters (remember to handle Optionals)
+        Object[] optionParams = new Object[commandDescriptor.commandMethod.getParameterCount()];
+        Parameter[] params = commandDescriptor.commandMethod.getParameters();
+        for (int i=0; i < commandDescriptor.commandMethod.getParameterCount(); i++)
+        {
+            Parameter param = params[i];
+            OptionMapping option = module.interaction.getOption(param.getName());
+
+            if (param.getType() == Optional.class)
+            {
+
+                Object optionObject = GetOptionToObject(option);
+                if (optionObject == null) optionParams[i] = Optional.empty();
+                else optionParams[i] = Optional.of(optionObject);
+            }
+
+            optionParams[i] = GetOptionToObject(option);
+        }
+
+        //Invoke module
+        try
+        {
+            commandDescriptor.commandMethod.invoke(module, optionParams);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(new LogMessage(this, "Module '" + module.getClass().getName() + "' threw exception", LogSeverity.Error, ex));
+            module.interaction.reply("An error occured").setEphemeral(true);
+        }
+    }
+
+    private Object GetOptionToObject(OptionMapping option)
+    {
+        return switch (option.getType())
+        {
+            case STRING -> option.getAsString();
+            case INTEGER -> option.getAsInt();
+            case BOOLEAN -> option.getAsBoolean();
+            case USER -> option.getAsUser();
+            case CHANNEL -> option.getAsChannel();
+            case ROLE -> option.getAsRole();
+            case NUMBER -> option.getAsDouble();
+            case ATTACHMENT -> option.getAsAttachment();
+            default -> null;
+        };
+    }
+
+    @SubscribeEvent
     public void onMessageReceived(MessageReceivedEvent event) {
-        super.onMessageReceived(event);
     }
 
-    @Override
+    @SubscribeEvent
     public void onMessageContextInteraction(MessageContextInteractionEvent event) {
-        super.onMessageContextInteraction(event);
     }
 
-    @Override
+    @SubscribeEvent
     public void onUserContextInteraction(UserContextInteractionEvent event) {
-        super.onUserContextInteraction(event);
     }
 
-    @Override
+    @SubscribeEvent
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        super.onButtonInteraction(event);
     }
 
-    @Override
+    @SubscribeEvent
     public void onEntitySelectInteraction(EntitySelectInteractionEvent event) {
-        super.onEntitySelectInteraction(event);
     }
 
-    @Override
+    @SubscribeEvent
     public void onStringSelectInteraction(StringSelectInteractionEvent event) {
-        super.onStringSelectInteraction(event);
     }
 
-    @Override
+    @SubscribeEvent
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
-        super.onCommandAutoCompleteInteraction(event);
+    }
+
+    private <T> T InstantiateModule(Class<?> moduleClass)
+    {
+        Constructor[] constructors = moduleClass.getDeclaredConstructors();
+
+        //Take the first constructor
+        Constructor constructor = constructors[0];
+        _logger.Log(new LogMessage(this, "Using constructor '" + constructor.toString() + "'", LogSeverity.Debug));
+        Object[] params = new Object[constructor.getParameterCount()];
+        Class<?>[] paramTypes = constructor.getParameterTypes();
+
+        for (int i=0; i < paramTypes.length; i++)
+        {
+            params[i] = _services.GetService(paramTypes[i]);
+            _logger.Log(new LogMessage(this, "Param type '" + paramTypes[i].getName() + "' for '" + moduleClass.getName() + "' value is '" + (params[i] == null ? "null" : params[i].toString()) + "'", LogSeverity.Verbose));
+            if (params[i] == null) _logger.Log(new LogMessage(this, "Param of type '" + paramTypes[i].getName() + "' for '" + moduleClass.getName() + "'s constructor value is null", LogSeverity.Warning));
+        }
+
+        try
+        {
+            _logger.Log(new LogMessage(this, "Instantiated module '" + moduleClass.getName() + "' with '" + params.length + "' params", LogSeverity.Debug));
+            return (T)constructor.newInstance(params);
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 }

@@ -1,13 +1,14 @@
 package com.innocuous.innohangmanbot.services;
 
 import com.innocuous.dependencyinjection.servicedata.IInitializable;
+import com.innocuous.innologger.ILogger;
 import com.innocuous.innologger.InnoLoggerService;
 import com.innocuous.innologger.LogMessage;
 import com.innocuous.innologger.LogSeverity;
 
 public class ErrorThrower extends InnoService implements IInitializable
 {
-    public ErrorThrower(InnoLoggerService logger)
+    public ErrorThrower(ILogger logger)
     {
         super(logger);
     }

@@ -32,6 +32,12 @@ Preconditions will still apply to classes without the @Group annotation and
 the annotation is limited to twice in a module hierarchy, although creating
 further nested module structures is still allowed
 
+The allowed hierarchy is:
+- Command
+  - Subcommand (1x @Group)
+  - SubcommandGroup 
+    - Subcommand (2x @Group)
+
 ## Annotations
 Commands will be registered through annotations of methods, the annotations
 will include:
@@ -59,6 +65,9 @@ that InteractionService will invoke and will return a result struct including
 the IsSuccess Boolean and an Optional Exception for if it wasn't a success.
 Preconditions should be invoked with a try catch to catch exceptions, and
 an exception should be classed as a precondition failure
+
+Permission-based preconditions will be handled through custom checking so
+that we can filter with subcommands
 
 ## Registration
 Module registration should be done before command registration to discord,
@@ -91,6 +100,7 @@ Options for method execution:
 ## InteractionConfig
 Config values we will need for the interaction system include:
 - Command Prefix
+- Command Auto Register
 
 ## Speed (Indexing)
 In the future we could use module indexing to index interactions so that

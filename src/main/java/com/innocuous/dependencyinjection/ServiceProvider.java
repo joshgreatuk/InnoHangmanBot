@@ -46,14 +46,15 @@ class ServiceProvider implements IServiceProvider
             if (serviceClass.isInterface())
             {
                 Class<?> finalServiceClass = serviceClass;
-                Optional<ServiceDescriptor> interfacedClass = _descriptors.values().stream().findFirst()
-                        .filter(x -> Arrays.stream(x.referenceType.getInterfaces()).anyMatch(y -> y == finalServiceClass)
-                        || Arrays.stream(x.referenceType.getSuperclass().getInterfaces()).anyMatch(y -> y == finalServiceClass));
+                //Optional<ServiceDescriptor> interfacedClass = _descriptors.values().stream().findFirst()
+                //        .filter(x -> Arrays.stream(x.referenceType.getInterfaces()).anyMatch(y -> y == finalServiceClass)
+                //        || Arrays.stream(x.referenceType.getSuperclass().getInterfaces()).anyMatch(y -> y == finalServiceClass));
 
-                if (interfacedClass.isPresent())
+                 ServiceDescriptor interfacedClass = _descriptors.get(GetServicesWithInterface(serviceClass).stream().findFirst().get().getClass());
+
+                if (interfacedClass != null)
                 {
-                    Log(new LogMessage(this, "GetService '" + serviceClass.getName() + "' not found, using superclass '" + interfacedClass.get().referenceType.getName() + "'", LogSeverity.Debug));
-                    serviceClass = interfacedClass.get().referenceType;
+                    serviceClass = interfacedClass.referenceType;
                 }
             }
             else

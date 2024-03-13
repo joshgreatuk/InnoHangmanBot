@@ -4,6 +4,7 @@ import com.innocuous.datasystem.IDataService;
 import com.innocuous.datasystem.IDatabase;
 import com.innocuous.dependencyinjection.IServiceProvider;
 import com.innocuous.dependencyinjection.servicedata.IInitializable;
+import com.innocuous.innologger.ILogger;
 import com.innocuous.innologger.InnoLoggerService;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class DataServiceInitializer extends InnoService implements IInitializable
 {
-    public DataServiceInitializer(InnoLoggerService logger, IDataService dataService, IServiceProvider services)
+    public DataServiceInitializer(ILogger logger, IDataService dataService, IServiceProvider services)
     {
         super(logger);
         _dataService = dataService;

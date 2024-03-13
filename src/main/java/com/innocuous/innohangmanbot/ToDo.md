@@ -15,13 +15,13 @@
 - [ ] JDAInteractionSystem
   - [ ] InteractionConfig
   - [ ] InteractionService
-  - [ ] Interaction Registration
+  - [x] Interaction Registration (to discord)
   - [x] ModuleDescriptor
   - [x] Module Registration
-  - [ ] Nested Interactions (sub-commands / groups) 
+  - [x] Nested Interactions (sub-commands / groups) 
   - [ ] Modals Support (Opt)
   - [ ] Annotations
-    - [ ] Slash Commands
+    - [x] Slash Commands
     - [ ] Text Commands
     - [ ] Context Commands
     - [ ] Component Interactions

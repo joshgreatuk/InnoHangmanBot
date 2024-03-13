@@ -3,10 +3,7 @@ package com.innocuous.innohangmanbot.services;
 import com.innocuous.dependencyinjection.IServiceProvider;
 import com.innocuous.dependencyinjection.servicedata.IInitializable;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
-import com.innocuous.innologger.InnoLoggerConfig;
-import com.innocuous.innologger.InnoLoggerService;
-import com.innocuous.innologger.LogMessage;
-import com.innocuous.innologger.LogSeverity;
+import com.innocuous.innologger.*;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
@@ -17,7 +14,7 @@ public class InitializationService extends InnoService implements IJDAEventListe
 {
     private final IServiceProvider _services;
 
-    public InitializationService(IServiceProvider services, InnoLoggerService logger)
+    public InitializationService(IServiceProvider services, ILogger logger)
     {
         super(logger);
         _services = services;
@@ -34,6 +31,7 @@ public class InitializationService extends InnoService implements IJDAEventListe
             try
             {
                 initService.Initialize();
+                initService.Initialize(event);
             }
             catch (Exception ex)
             {
