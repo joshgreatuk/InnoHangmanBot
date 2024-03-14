@@ -160,7 +160,7 @@ public class InteractionService
 
             if (type == OptionType.UNKNOWN) throw new UnknownError("Slash command parameter is of unknown type");
 
-            options[i] = new OptionData(type, param.getName(), description, required);
+            options[i] = new OptionData(type, param.getName().toLowerCase(), description, required);
         }
 
         return options;
@@ -293,7 +293,7 @@ public class InteractionService
     {
         //Find better way to traverse modules
         String command = event.getFullCommandName();
-        Optional<ModuleDescriptor> targetModule = modules.stream().findFirst().filter(x -> x.slashCommands.containsKey(command));
+        Optional<ModuleDescriptor> targetModule = modules.stream().filter(x -> x.slashCommands.containsKey(command)).findFirst();
         if (targetModule.isEmpty())
         {
             throw new NullPointerException();
@@ -318,6 +318,7 @@ public class InteractionService
                 Object optionObject = GetOptionToObject(option);
                 if (optionObject == null) optionParams[i] = Optional.empty();
                 else optionParams[i] = Optional.of(optionObject);
+                continue;
             }
 
             optionParams[i] = GetOptionToObject(option);
@@ -337,6 +338,7 @@ public class InteractionService
 
     private Object GetOptionToObject(OptionMapping option)
     {
+        if (option == null) return null;
         return switch (option.getType())
         {
             case STRING -> option.getAsString();

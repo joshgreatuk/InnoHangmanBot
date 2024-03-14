@@ -27,21 +27,4 @@ public class InfoModule extends JDAModuleBase
                         .build())
                 .setEphemeral(true).queue();
     }
-
-    @Group(name = "Utils")
-    public class EchoModule extends JDAModuleBase
-    {
-        @SlashCommand(name = "echo")
-        public void Echo(String message, Optional<User> user)
-        {
-            interaction.reply(new MessageCreateBuilder()
-                            .addEmbeds(new EmbedBuilder()
-                                    .setTitle("Echo!")
-                                    .setAuthor(user.isPresent() ? user.get().getName() : "InnoHangmanBot")
-                                    .setDescription(message)
-                                    .build())
-                            .build())
-                    .setEphemeral(true).queue();
-        }
-    }
 }

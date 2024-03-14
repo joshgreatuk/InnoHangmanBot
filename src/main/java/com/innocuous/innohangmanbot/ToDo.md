@@ -12,8 +12,9 @@
   - [x] Direct Super support in GetServicesWithInterface
   - [x] Interface and super interface support in GetService
   - [ ] Add multi-constructor support (order by params, iterate till we can satisfy one constructor)
+  - [ ] Add @ServiceConstructor for manually setting which constructor to use
 - [ ] JDAInteractionSystem
-  - [ ] InteractionConfig
+  - [x] InteractionConfig
   - [ ] InteractionService
   - [x] Interaction Registration (to discord)
   - [x] ModuleDescriptor
