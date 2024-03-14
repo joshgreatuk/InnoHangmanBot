@@ -5,6 +5,9 @@ import com.innocuous.dependencyinjection.*;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
 import com.innocuous.innohangmanbot.data.HangmanBotConfig;
 import com.innocuous.innohangmanbot.services.*;
+import com.innocuous.innohangmanbot.services.hangman.GameInstanceData;
+import com.innocuous.innohangmanbot.services.hangman.GameInstanceService;
+import com.innocuous.innohangmanbot.services.hangman.GameInstanceServiceConfig;
 import com.innocuous.innologger.*;
 import com.innocuous.jdamodulesystem.InteractionService;
 import com.innocuous.jdamodulesystem.data.InteractionConfig;
@@ -68,6 +71,7 @@ public class HangmanBot
             Log(new LogMessage(this, "Bot running"));
 
             // wait();
+            instance.awaitShutdown();
         }
         catch (Exception ex)
         {
@@ -92,6 +96,10 @@ public class HangmanBot
                 .AddTransientService(InitializationService.class)
                 //.AddTransientService(DataServiceInitializer.class)
                 .AddTransientService(ModuleRegistrationService.class)
+
+                .AddSingletonService(GameInstanceServiceConfig.class)
+                .AddSingletonService(GameInstanceData.class)
+                .AddSingletonService(GameInstanceService.class)
 
                 .Build();
     }

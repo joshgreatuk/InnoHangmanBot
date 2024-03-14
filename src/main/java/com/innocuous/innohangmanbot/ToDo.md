@@ -33,6 +33,7 @@
   - [ ] Unit Tests
 - [ ] InnoHangmanBot
   - [ ] GameInstanceManager
+    - [ ] Add DMs support (if guildID == 0 then it's a private channel)
     - [ ] Unit Tests
   - [ ] HangmanService
     - [ ] Unit Tests
