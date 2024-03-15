@@ -32,7 +32,7 @@
     - [ ] TypeConverters (Opt)
   - [ ] Unit Tests
 - [ ] InnoHangmanBot
-  - [ ] GameInstanceManager
+  - [x] GameInstanceManager
     - [ ] Add DMs support (if guildID == 0 then it's a private channel)
     - [ ] Unit Tests
   - [ ] HangmanService

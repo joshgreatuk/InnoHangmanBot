@@ -45,28 +45,46 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     {
         jda = readyEvent.getJDA();
 
-        //Validate guild, channel and messages still exist
-
-
-        //Rebuild message to exclude shutdown message
-
+        for (GameInstance instance : _data.instances.values())
+        {
+            RefreshInstance(instance.instanceID);
+        }
     }
 
     @Override
     public void Shutdown()
     {
         //Remove components and add Shutdown message to all instances
-        ArrayList<MessageEmbed> embeds = new ArrayList<>(message.getEmbeds());
-        embeds.add(new EmbedBuilder()
-                .setTitle("InnoHangmanBot is offline")
-                .setColor(Color.red)
-                .setDescription("Bot is offline, this instance is currently saved and will be resumed once the bot is back online")
-                .build());
+        for (GameInstance instance : _data.instances.values())
+        {
+            Message message = GetMessage(instance);
+            if (message == null) continue;
+
+            ArrayList<MessageEmbed> embeds = new ArrayList<>(message.getEmbeds());
+
+            MessageEmbed embed = embeds.get(embeds.size()-1);
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.copyFrom(embed);
+
+            embeds.add(new EmbedBuilder()
+                    .setTitle("InnoHangmanBot is offline")
+                    .setColor(Color.red)
+                    .setDescription("Bot is offline, this instance is currently saved and will be resumed once the bot is back online")
+                    .build());
+
+            message.editMessage(new MessageEditBuilder()
+                    .setComponents(Collections.emptyList())
+                    .setEmbeds(embeds)
+                    .setReplace(true)
+                    .build()).queue();
+        }
     }
 
     public void RegisterInstance(GameInstance instance)
     {
-
+        _data.instances.put(instance.instanceID, instance);
+        RefreshInstance(instance.instanceID);
+        _logger.Log(new LogMessage(this, "Registered game instance '" + instance.instanceID + "'", LogSeverity.Debug));
     }
 
     public void CloseInstance(String instanceID)
@@ -116,7 +134,6 @@ public class GameInstanceService extends InnoService implements IInitializable, 
             return;
         }
 
-        boolean hasMessage = instance.currentMessageID != 0;
         GuildMessageChannel channel = GetMessageChannel(instance);
         if (channel == null)
         {
@@ -194,7 +211,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     public Message GetMessage(GameInstance instance)
     {
         GuildMessageChannel channel = GetMessageChannel(instance);
-        if (channel == null) return null;
+        if (channel == null || instance.currentMessageID == 0) return null;
 
         return channel.getHistory().getMessageById(instance.currentMessageID);
     }
