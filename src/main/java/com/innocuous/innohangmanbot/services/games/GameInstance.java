@@ -1,4 +1,4 @@
-package com.innocuous.innohangmanbot.services.hangman;
+package com.innocuous.innohangmanbot.services.games;
 
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;

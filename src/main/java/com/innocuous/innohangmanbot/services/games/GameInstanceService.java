@@ -1,4 +1,4 @@
-package com.innocuous.innohangmanbot.services.hangman;
+package com.innocuous.innohangmanbot.services.games;
 
 import com.innocuous.dependencyinjection.servicedata.IInitializable;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
-import org.apache.commons.collections4.Get;
 
 import java.awt.*;
 import java.util.ArrayList;

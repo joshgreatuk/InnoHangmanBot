@@ -1,13 +1,12 @@
 package com.innocuous.innohangmanbot;
 
-import com.innocuous.datasystem.DataService;
 import com.innocuous.dependencyinjection.*;
 import com.innocuous.dependencyinjection.servicedata.IStoppable;
 import com.innocuous.innohangmanbot.data.HangmanBotConfig;
 import com.innocuous.innohangmanbot.services.*;
-import com.innocuous.innohangmanbot.services.hangman.GameInstanceData;
-import com.innocuous.innohangmanbot.services.hangman.GameInstanceService;
-import com.innocuous.innohangmanbot.services.hangman.GameInstanceServiceConfig;
+import com.innocuous.innohangmanbot.services.games.GameInstanceData;
+import com.innocuous.innohangmanbot.services.games.GameInstanceService;
+import com.innocuous.innohangmanbot.services.games.GameInstanceServiceConfig;
 import com.innocuous.innologger.*;
 import com.innocuous.jdamodulesystem.InteractionService;
 import com.innocuous.jdamodulesystem.data.InteractionConfig;

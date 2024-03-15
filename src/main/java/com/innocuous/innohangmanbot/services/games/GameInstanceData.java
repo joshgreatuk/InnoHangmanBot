@@ -1,4 +1,4 @@
-package com.innocuous.innohangmanbot.services.hangman;
+package com.innocuous.innohangmanbot.services.games;
 
 import com.innocuous.innoconfig.InnoConfigBase;
 

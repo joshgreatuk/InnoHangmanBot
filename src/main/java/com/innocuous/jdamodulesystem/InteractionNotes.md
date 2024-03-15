@@ -108,7 +108,7 @@ the InteractionService only needs to check a HashTable for a string entry
 instead of searching through modules
 
 ## Type Converters
-A type converter can turn any class used as a command paramter that wouldn't
+A type converter can turn any class used as a command parameter that wouldn't
 usually be supported to be turned into a class that is supported. For example,
 a base type converter is the EnumTypeConverter, since Enums wouldn't usually be
 supported, the type converter converts the Enum to a String value and then

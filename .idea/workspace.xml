@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/HangmanService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/HangmanServiceConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/WordCategory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/GameInstanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/GameInstanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/GameInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/games/GameInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/GameInstanceData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/games/GameInstanceData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/GameInstanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/games/GameInstanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/GameInstanceServiceConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/games/GameInstanceServiceConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionNotes.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
