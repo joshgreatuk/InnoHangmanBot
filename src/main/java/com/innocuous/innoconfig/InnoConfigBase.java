@@ -101,4 +101,10 @@ public abstract class InnoConfigBase implements IStoppable
             throw new RuntimeException(ex);
         }
     }
+
+    public Boolean FileExists()
+    {
+        String path = Path.get("") + "/" + GetConfigPath();
+        return Files.exists(Paths.get(path));
+    }
 }

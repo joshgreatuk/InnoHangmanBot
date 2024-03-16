@@ -9,5 +9,5 @@ public class GameInstanceServiceConfig extends InnoConfigBase
         return "Config/GameInstanceService.json";
     }
 
-    public Boolean removeOldMessages;
+    public Boolean removeOldMessages = true;
 }

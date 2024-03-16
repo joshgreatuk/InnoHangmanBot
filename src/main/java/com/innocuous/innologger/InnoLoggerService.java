@@ -1,11 +1,13 @@
 package com.innocuous.innologger;
 
+import com.sun.jdi.InvocationException;
 import net.dv8tion.jda.api.entities.Icon;
 import okio.Path;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.FileWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -70,6 +72,14 @@ public class InnoLoggerService implements ILogger
         if (message.exception.isEmpty()) return logMessage;
 
         StackTraceElement[] stackTrace = message.exception.get().getStackTrace();
+        if (message.exception.get().getClass().equals(InvocationTargetException.class))
+        {
+            InvocationTargetException targetException = (InvocationTargetException)message.exception.get();
+            stackTrace = targetException.getCause().getStackTrace();
+
+            logMessage += (useColours ? colourString : "") + "\t" + "Via exception : " + targetException.getCause() + (useColours ? colourReset : "") + "\n";
+        }
+
         for (StackTraceElement element : stackTrace)
         {
             logMessage += (useColours ? colourString : "") + "\t" + element.toString() + (useColours ? colourReset : "") + "\n";

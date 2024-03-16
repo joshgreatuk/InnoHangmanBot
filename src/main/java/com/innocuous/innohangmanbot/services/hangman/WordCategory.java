@@ -5,6 +5,7 @@ public class WordCategory
     public String name;
     public String[] wordList = new String[0];
 
+    public WordCategory() { }
     public WordCategory(String name)
     {
         this.name = name;

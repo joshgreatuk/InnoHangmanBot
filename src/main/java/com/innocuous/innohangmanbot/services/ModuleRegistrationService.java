@@ -1,6 +1,7 @@
 package com.innocuous.innohangmanbot.services;
 
 import com.innocuous.dependencyinjection.servicedata.IInitializable;
+import com.innocuous.innohangmanbot.modules.HangmanModule;
 import com.innocuous.innohangmanbot.modules.InfoModule;
 import com.innocuous.innologger.ILogger;
 import com.innocuous.jdamodulesystem.InteractionService;
@@ -20,7 +21,8 @@ public class ModuleRegistrationService extends InnoService implements IInitializ
 
     private final Class<?>[] moduleClases = new Class<?>[]
             {
-                InfoModule.class
+                    InfoModule.class,
+                    HangmanModule.class
             };
 
     @Override

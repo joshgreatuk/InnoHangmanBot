@@ -2,12 +2,15 @@ package com.innocuous.jdamodulesystem;
 
 import com.innocuous.dependencyinjection.IServiceProvider;
 import com.innocuous.innologger.ILogger;
-import com.innocuous.innologger.InnoLoggerService;
 import com.innocuous.innologger.LogMessage;
 import com.innocuous.innologger.LogSeverity;
 import com.innocuous.jdamodulesystem.annotations.Description;
 import com.innocuous.jdamodulesystem.annotations.Group;
 import com.innocuous.jdamodulesystem.annotations.SlashCommand;
+import com.innocuous.jdamodulesystem.annotations.components.ButtonComponent;
+import com.innocuous.jdamodulesystem.annotations.components.EntitySelectComponent;
+import com.innocuous.jdamodulesystem.annotations.components.StringSelectComponent;
+import com.innocuous.jdamodulesystem.data.ComponentDescriptor;
 import com.innocuous.jdamodulesystem.data.InteractionConfig;
 import com.innocuous.jdamodulesystem.data.ModuleDescriptor;
 import com.innocuous.jdamodulesystem.data.SlashCommandDescriptor;
@@ -19,22 +22,20 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import org.apache.commons.collections4.Get;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InteractionService
 {
@@ -99,8 +100,8 @@ public class InteractionService
 
         modules.add(module);
 
-        //Check methods for annotations (preconditions, commands)
-        for (Method classMethod : Arrays.stream(targetClass.getMethods())
+        //Check methods for annotations (preconditions, commands, components)
+        for (Method classMethod : Arrays.stream(targetClass.getDeclaredMethods())
                 .filter(x -> x.isAnnotationPresent(SlashCommand.class)).toList())
         {
             //Check fields for annotations (type converters, autocompletes)
@@ -113,6 +114,52 @@ public class InteractionService
             module.slashCommands.put(((module.subcommand.isEmpty() ? "" : module.subcommand + " ")
                     + (module.subcommandGroup.isEmpty() ? "" : module.subcommandGroup + " ")
                     + commandData.getName()).trim(), new SlashCommandDescriptor(commandData, classMethod));
+        }
+
+        for (Method classMethod : Arrays.stream(targetClass.getDeclaredMethods())
+                .filter(x -> x.isAnnotationPresent(ButtonComponent.class) ||
+                        x.isAnnotationPresent(EntitySelectComponent.class) ||
+                        x.isAnnotationPresent(StringSelectComponent.class)).toList())
+        {
+            if (classMethod.getParameterCount() > 1)
+            {
+                _logger.Log(new LogMessage(this, "Method '"+classMethod.getName()+"' of module '"+targetClass.getName()+"' takes more than 1 parameter"));
+                continue;
+            }
+
+            String customID = "";
+            Boolean ignoreGroups = false;
+
+            ButtonComponent buttonComponent = classMethod.getAnnotation(ButtonComponent.class);
+            if (buttonComponent != null)
+            {
+                customID = buttonComponent.customID();
+                ignoreGroups = buttonComponent.ignoreGroups();
+            }
+
+            EntitySelectComponent entitySelectComponent = classMethod.getAnnotation(EntitySelectComponent.class);
+            if (entitySelectComponent != null)
+            {
+                customID = entitySelectComponent.customID();
+                ignoreGroups = entitySelectComponent.ignoreGroups();
+            }
+
+            StringSelectComponent stringSelectComponent = classMethod.getAnnotation(StringSelectComponent.class);
+            if (stringSelectComponent != null)
+            {
+                customID = stringSelectComponent.customID();
+                ignoreGroups = stringSelectComponent.ignoreGroups();
+            }
+
+            if (customID.isEmpty())
+            {
+                _logger.Log(new LogMessage(this, "Method '"+classMethod.getName()+"' of module '"+targetClass.getName()+"' component annotation returned empty ID", LogSeverity.Warning));
+                continue;
+            }
+
+            module.components.put((ignoreGroups ? "" : ((module.subcommand.isEmpty() ? "" : module.subcommand + " ")
+                    + (module.subcommandGroup.isEmpty() ? "" : module.subcommandGroup + " "))
+                    + customID).trim(), new ComponentDescriptor(customID, ignoreGroups, classMethod));
         }
 
         //Iterate through nested classes to AddModule
@@ -300,7 +347,7 @@ public class InteractionService
         }
 
         JDAModuleBase module = this.<JDAModuleBase>InstantiateModule(targetModule.get().moduleClass);
-        module.interaction = event.getInteraction();
+        module.commandInteraction = event.getInteraction();
 
         SlashCommandDescriptor commandDescriptor = targetModule.get().slashCommands.get(command);
 
@@ -310,7 +357,7 @@ public class InteractionService
         for (int i=0; i < commandDescriptor.commandMethod.getParameterCount(); i++)
         {
             Parameter param = params[i];
-            OptionMapping option = module.interaction.getOption(param.getName());
+            OptionMapping option = module.commandInteraction.getOption(param.getName());
 
             if (param.getType() == Optional.class)
             {
@@ -325,15 +372,7 @@ public class InteractionService
         }
 
         //Invoke module
-        try
-        {
-            commandDescriptor.commandMethod.invoke(module, optionParams);
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(new LogMessage(this, "Module '" + module.getClass().getName() + "' threw exception", LogSeverity.Error, ex));
-            module.interaction.reply("An error occured").setEphemeral(true);
-        }
+        InvokeModuleMethod(commandDescriptor.commandMethod, module, optionParams);
     }
 
     private Object GetOptionToObject(OptionMapping option)
@@ -349,7 +388,7 @@ public class InteractionService
             case ROLE -> option.getAsRole();
             case NUMBER -> option.getAsDouble();
             case ATTACHMENT -> option.getAsAttachment();
-            default -> null;
+            default -> null; //Null is where TypeConverters go
         };
     }
 
@@ -366,19 +405,68 @@ public class InteractionService
     }
 
     @SubscribeEvent
-    public void onButtonInteraction(ButtonInteractionEvent event) {
+    public void onButtonInteraction(ButtonInteractionEvent event)
+    {
+        ModuleDescriptor targetModule = GetComponentModule(event.getComponentId());
+        if (targetModule == null)
+        {
+            throw new NullPointerException();
+        }
+
+        JDAModuleBase module = this.<JDAModuleBase>InstantiateModule(targetModule.moduleClass);
+        module.componentInteraction = event.getInteraction();
+
+        module.BeforeExecute();
+
+        ComponentDescriptor component = targetModule.components.get(event.getComponentId());
+        InvokeModuleMethod(component.commandMethod, module);
+
+        module.AfterExecute();
     }
 
     @SubscribeEvent
-    public void onEntitySelectInteraction(EntitySelectInteractionEvent event) {
+    public void onGenericSelectMenuInteraction(GenericSelectMenuInteractionEvent event)
+    {
+        ModuleDescriptor targetModule = GetComponentModule(event.getComponentId());
+        if (targetModule == null)
+        {
+            throw new NullPointerException();
+        }
+
+        JDAModuleBase module = this.<JDAModuleBase>InstantiateModule(targetModule.moduleClass);
+        module.componentInteraction = event.getInteraction();
+
+        ComponentDescriptor component = targetModule.components.get(event.getComponentId());
+        InvokeModuleMethod(component.commandMethod, module, new Object[]
+                { List.class.isAssignableFrom(component.commandMethod.getParameters()[0].getType())
+                        ? event.getInteraction().getValues()
+                        : event.getInteraction().getValues().get(0)});
     }
 
-    @SubscribeEvent
-    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
+    private ModuleDescriptor GetComponentModule(String componentID)
+    {
+        return modules.stream().filter(x -> x.components.containsKey(componentID)).findFirst().orElse(null);
     }
 
     @SubscribeEvent
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
+    }
+
+    private void InvokeModuleMethod(Method targetMethod, JDAModuleBase instance)
+    {
+        InvokeModuleMethod(targetMethod, instance, new Object[0]);
+    }
+    private void InvokeModuleMethod(Method targetMethod, JDAModuleBase instance, Object[] params)
+    {
+        try
+        {
+            targetMethod.invoke(instance, params);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(new LogMessage(this, "Module '" + instance.getClass().getName() + "' threw exception", LogSeverity.Error, ex));
+            if (instance.commandInteraction != null) instance.commandInteraction.reply("An error occured").setEphemeral(true).queue();
+        }
     }
 
     private <T> T InstantiateModule(Class<?> moduleClass)
@@ -387,7 +475,7 @@ public class InteractionService
 
         //Take the first constructor
         Constructor constructor = constructors[0];
-        _logger.Log(new LogMessage(this, "Using constructor '" + constructor.toString() + "'", LogSeverity.Debug));
+        _logger.Log(new LogMessage(this, "Using constructor '" + constructor.toString() + "'", LogSeverity.Verbose));
         Object[] params = new Object[constructor.getParameterCount()];
         Class<?>[] paramTypes = constructor.getParameterTypes();
 
@@ -400,7 +488,7 @@ public class InteractionService
 
         try
         {
-            _logger.Log(new LogMessage(this, "Instantiated module '" + moduleClass.getName() + "' with '" + params.length + "' params", LogSeverity.Debug));
+            _logger.Log(new LogMessage(this, "Instantiated module '" + moduleClass.getName() + "' with '" + params.length + "' params", LogSeverity.Verbose));
             return (T)constructor.newInstance(params);
         }
         catch (Exception ex)

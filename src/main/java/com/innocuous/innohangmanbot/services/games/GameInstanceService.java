@@ -17,10 +17,13 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
+
+import java.awt.Color;
 
 public class GameInstanceService extends InnoService implements IInitializable, IStoppable
 {
@@ -67,15 +70,14 @@ public class GameInstanceService extends InnoService implements IInitializable, 
 
             embeds.add(new EmbedBuilder()
                     .setTitle("InnoHangmanBot is offline")
-                    .setColor(Color.red)
+                    .setColor(Color.RED)
                     .setDescription("Bot is offline, this instance is currently saved and will be resumed once the bot is back online")
                     .build());
 
             message.editMessage(new MessageEditBuilder()
                     .setComponents(Collections.emptyList())
                     .setEmbeds(embeds)
-                    .setReplace(true)
-                    .build()).queue();
+                    .build()).complete();
         }
     }
 
@@ -144,23 +146,31 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         //If there is a message, grab it and update it using the supplier
         if (instance.currentMessageID != 0)
         {
-            Message existingMessage = channel.getHistory().getMessageById(instance.currentMessageID);
-            if (existingMessage != null)
+            Message existingMessage = channel.retrieveMessageById(instance.currentMessageID).complete();
+            if (_config.removeOldMessages)
             {
-                existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.get().build())).queue();
-                return;
+                channel.deleteMessageById(instance.currentMessageID).queue();
             }
-
+            else
+            {
+                if (existingMessage != null) {
+                    Message newMessage = existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.apply(instance).build())).complete();
+                    instance.cachedMessage = newMessage;
+                    return;
+                }
+            }
+            instance.cachedMessage = null;
             instance.currentMessageID = 0L;
         }
 
         //If no message, create message using supplier
-        channel.sendMessage(instance.messageSupplier.get().build()).onSuccess(
-                x -> instance.currentMessageID = x.getIdLong()).queue();
+        Message message = channel.sendMessage(instance.messageSupplier.apply(instance).build()).complete();
+        instance.currentMessageID = message.getIdLong();
+        instance.cachedMessage = message;
     }
 
 
-    public void SetInstanceSupplier(String instanceID, Supplier<MessageCreateBuilder> supplier)
+    public void SetInstanceSupplier(String instanceID, Function<GameInstance, MessageCreateBuilder> supplier, String supplierString)
     {
         if (!InstanceExists(instanceID))
         {
@@ -168,7 +178,9 @@ public class GameInstanceService extends InnoService implements IInitializable, 
             return;
         }
 
-        GetInstance(instanceID).messageSupplier = supplier;
+        GameInstance instance = GetInstance(instanceID);
+        instance.messageSupplier = supplier;
+        instance.messageSupplierString = supplierString;
     }
 
     public GameInstance GetInstance(String instanceID)
@@ -183,6 +195,11 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         return instance;
     }
 
+    public List<GameInstance> GetInstances()
+    {
+        return _data.instances.values().stream().toList();
+    }
+
     public Boolean InstanceExists(String instanceID)
     {
         return _data.instances.containsKey(instanceID);
@@ -195,23 +212,23 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         Guild guild = jda.getGuildById(instance.guildID);
         if (guild == null) return null;
 
-        GuildMessageChannel channel = guild.getChannelById(GuildMessageChannel.class, instance.channelID);
-        if (channel == null) return null;
-
-        return channel;
+        return guild.getChannelById(GuildMessageChannel.class, instance.channelID);
     }
 
     public Message GetMessage(GameInstance instance, GuildMessageChannel channel)
     {
+        if (instance.cachedMessage != null) return instance.cachedMessage;
         if (channel == null) return null;
 
         return channel.getHistory().getMessageById(instance.currentMessageID);
     }
     public Message GetMessage(GameInstance instance)
     {
+        if (instance.cachedMessage != null) return instance.cachedMessage;
+
         GuildMessageChannel channel = GetMessageChannel(instance);
         if (channel == null || instance.currentMessageID == 0) return null;
 
-        return channel.getHistory().getMessageById(instance.currentMessageID);
+        return channel.retrieveMessageById(instance.currentMessageID).complete();
     }
 }

@@ -7,6 +7,8 @@ import com.innocuous.innohangmanbot.services.*;
 import com.innocuous.innohangmanbot.services.games.GameInstanceData;
 import com.innocuous.innohangmanbot.services.games.GameInstanceService;
 import com.innocuous.innohangmanbot.services.games.GameInstanceServiceConfig;
+import com.innocuous.innohangmanbot.services.hangman.HangmanService;
+import com.innocuous.innohangmanbot.services.hangman.HangmanServiceConfig;
 import com.innocuous.innologger.*;
 import com.innocuous.jdamodulesystem.InteractionService;
 import com.innocuous.jdamodulesystem.data.InteractionConfig;
@@ -52,6 +54,7 @@ public class HangmanBot
         _config.Init();
         _logger = _services.GetService(InnoLoggerService.class);
         JDABuilder client = _services.GetService(JDABuilder.class);
+        client.setEnableShutdownHook(false);
 
         String botToken = _config.debugMode ? _config.debugBotToken : _config.releaseBotToken;
         client.setToken(botToken);
@@ -69,8 +72,10 @@ public class HangmanBot
             JDA instance = _services.GetService(JDA.class);
             Log(new LogMessage(this, "Bot running"));
 
+            _services.GetService(HangmanService.class);
+
             // wait();
-            instance.awaitShutdown();
+            // instance.awaitShutdown();
         }
         catch (Exception ex)
         {
@@ -100,6 +105,9 @@ public class HangmanBot
                 .AddSingletonService(GameInstanceData.class)
                 .AddSingletonService(GameInstanceService.class)
 
+                .AddSingletonService(HangmanServiceConfig.class)
+                .AddSingletonService(HangmanService.class)
+
                 .Build();
     }
 
@@ -109,18 +117,6 @@ public class HangmanBot
     public void Shutdown()
     {
         _logger.Log(new LogMessage(this, "Starting shutdown"));
-
-        //Shutdown JDA
-        JDA instance = _services.<JDA>GetService(JDA.class);
-        instance.shutdown();
-        try
-        {
-            instance.awaitShutdown();
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(new LogMessage(this, "JDA await shutdown failed, bot may not shutdown correctly!", LogSeverity.Critical, ex));
-        }
 
         //Shutdown services
         for (Object service : _services.GetActiveServices())
@@ -139,6 +135,19 @@ public class HangmanBot
             {
                 _logger.Log(new LogMessage(stoppableService, "Caught an exception during Shutdown", LogSeverity.Critical, ex));
             }
+        }
+
+        //Shutdown JDA
+        _logger.Log(new LogMessage(this, "Shutting down JDA"));
+        JDA instance = _services.<JDA>GetService(JDA.class);
+        instance.shutdown();
+        try
+        {
+            instance.awaitShutdown();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(new LogMessage(this, "JDA await shutdown failed, bot may not shutdown correctly!", LogSeverity.Critical, ex));
         }
 
         _logger.Log(new LogMessage(this, "Shutdown completed"));

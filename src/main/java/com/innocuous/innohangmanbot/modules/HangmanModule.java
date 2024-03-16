@@ -1,0 +1,170 @@
+package com.innocuous.innohangmanbot.modules;
+
+import com.innocuous.innohangmanbot.services.hangman.HangmanService;
+import com.innocuous.innohangmanbot.services.hangman.HangmanStatus;
+import com.innocuous.jdamodulesystem.JDAModuleBase;
+import com.innocuous.jdamodulesystem.annotations.Description;
+import com.innocuous.jdamodulesystem.annotations.SlashCommand;
+import com.innocuous.jdamodulesystem.annotations.components.ButtonComponent;
+import com.innocuous.jdamodulesystem.annotations.components.StringSelectComponent;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+
+import java.awt.*;
+import java.util.List;
+
+public class HangmanModule extends JDAModuleBase
+{
+    protected final HangmanService _hangmanService;
+
+    public HangmanModule(HangmanService hangmanService)
+    {
+        _hangmanService = hangmanService;
+    }
+
+    //Slash Commands
+    @SlashCommand(name = "create-game", description = "Create a hangman game in a new thread")
+    public void SetupGameCommand()
+    {
+        InteractionHook hook = commandInteraction.reply("Creating game!").complete();
+        Message message = hook.retrieveOriginal().complete();
+        ThreadChannel channel = message.createThreadChannel("Hangman!").complete();
+        channel.join().queue();
+        channel.addThreadMember(commandInteraction.getUser()).queue();
+
+        String newGameID = _hangmanService.GenerateHangmanGameID(channel.getGuild().getIdLong(), channel.getIdLong());
+        _hangmanService.StartGameSetup(newGameID, channel.getGuild().getIdLong(), channel.getIdLong());
+    }
+
+    @SlashCommand(name = "guess", description = "Make a guess")
+    public void GuessCommand(@Description(description = "Guess a letter or a word") String guess)
+    {
+        if (!_hangmanService.GameExists(GetGameID()))
+        {
+            commandInteraction.reply("Please create a game with /create-game first").setEphemeral(true).queue();
+            return;
+        }
+
+        if (guess.length() < 2 && !Character.isLetter(guess.charAt(0)) )
+        {
+            FailGuess("Guess must be a letter or a word", true);
+            return;
+        }
+
+        //Check guess length, if char been used, etc
+        if (guess.length() < 2 && _hangmanService.IsCharUsed(GetGameID(), guess.charAt(0)))
+        {
+            FailGuess(guess + " has already been guessed!", true);
+            return;
+        }
+
+        //Reply right or wrong
+        boolean guessCorrect = _hangmanService.MakeGuess(GetGameID(), guess.toLowerCase());
+        if (!guessCorrect)
+        {
+            if (guess.length() > 1)
+            {
+                FailGuess(guess + " is incorrect!",false);
+                return;
+            }
+            FailGuess(guess + " isn't in the word!", false);
+            return;
+        }
+
+        if (guess.length() > 1)
+        {
+            commandInteraction.reply(new MessageCreateBuilder()
+                    .setEmbeds(new EmbedBuilder()
+                            .setTitle(guess + " is correct! Well done!")
+                            .setColor(Color.GREEN).build())
+                    .build()).queue();
+            return;
+        }
+
+        commandInteraction.reply(new MessageCreateBuilder()
+                .setEmbeds(new EmbedBuilder()
+                        .setTitle(guess + " is in the word!")
+                        .setColor(Color.GREEN).build())
+                .build()).queue();
+    }
+
+    private void FailGuess(String message, Boolean ephemeral)
+    {
+        commandInteraction.reply(new MessageCreateBuilder()
+                .setEmbeds(new EmbedBuilder()
+                        .setTitle(message)
+                        .setColor(Color.RED).build())
+                .build()).setEphemeral(ephemeral).queue();
+        _hangmanService.UpdatePage(GetGameID());
+    }
+
+    @SlashCommand(name = "end-game", description = "End the current game")
+    public void EndGameCommand()
+    {
+        if (!_hangmanService.GameExists(GetGameID()))
+        {
+            commandInteraction.reply("Please create a game with /create-game first").setEphemeral(true).queue();
+            return;
+        }
+
+        //End the game
+        _hangmanService.EndGame(GetGameID(), HangmanStatus.Cancelled);
+        commandInteraction.reply("Ending game!").queue();
+    }
+
+    //Game Setup Page
+    @StringSelectComponent(customID = "hangman.select-category")
+    public void SelectWordCategory(List<String> selectedCategory)
+    {
+        componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
+        String selected = selectedCategory.get(0);
+        _hangmanService.UpdateGameCategory(GetGameID(), selected);
+        ThreadChannel channel = (ThreadChannel)componentInteraction.getMessageChannel();
+        channel.getManager().setName("Hangman! Category: "+selected).queue();
+    }
+
+    @ButtonComponent(customID = "hangman.start-game")
+    public void StartGameButton()
+    {
+        componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
+        _hangmanService.StartGame(GetGameID());
+    }
+
+    @ButtonComponent(customID = "hangman.cancel-game")
+    public void CancelGameButton()
+    {
+        componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
+        _hangmanService.EndGame(GetGameID(), HangmanStatus.Cancelled);
+
+    }
+
+    //Game End Page
+    @ButtonComponent(customID = "hangman.playagain:yes")
+    public void PlayAgainButton()
+    {
+        _hangmanService.PlayAgain(GetGameID());
+        componentInteraction.editMessage(new MessageEditBuilder().setSuppressEmbeds(false).build()).queue();
+    }
+
+    @ButtonComponent(customID = "hangman.playagain:no")
+    public void DontPlayAgainButton()
+    {
+        componentInteraction.editMessage(new MessageEditBuilder().setSuppressEmbeds(false).build()).queue();
+        _hangmanService.DontPlayAgain(GetGameID(), (ThreadChannel)componentInteraction.getChannel());
+
+    }
+
+    private String GetGameID()
+    {
+        return commandInteraction != null ? _hangmanService.GenerateHangmanGameID(
+                commandInteraction.getGuild().getIdLong(),
+                commandInteraction.getChannelIdLong())
+                : _hangmanService.GenerateHangmanGameID(
+                        componentInteraction.getGuild().getIdLong(),
+                componentInteraction.getChannelIdLong());
+    }
+}

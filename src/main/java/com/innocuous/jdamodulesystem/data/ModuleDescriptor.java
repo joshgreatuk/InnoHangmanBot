@@ -1,6 +1,5 @@
 package com.innocuous.jdamodulesystem.data;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class ModuleDescriptor
@@ -14,6 +13,7 @@ public class ModuleDescriptor
     public String subcommandGroupDesc = "";
 
     public Hashtable<String, SlashCommandDescriptor> slashCommands = new Hashtable<>();
+    public Hashtable<String, ComponentDescriptor> components = new Hashtable<>();
 
     public ModuleDescriptor(Class<?> moduleClass)
     {

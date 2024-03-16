@@ -5,14 +5,10 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.lang.reflect.Method;
 
-public class SlashCommandDescriptor
+public class SlashCommandDescriptor extends CommandDescriptor<SlashCommandData>
 {
-    public SlashCommandData data;
-    public Method commandMethod;
-
     public SlashCommandDescriptor(SlashCommandData data, Method commandMethod)
     {
-        this.data = data;
-        this.commandMethod = commandMethod;
+        super(data, commandMethod);
     }
 }

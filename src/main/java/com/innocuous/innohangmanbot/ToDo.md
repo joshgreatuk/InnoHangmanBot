@@ -4,6 +4,7 @@
   - [x] Improve error logging
   - [x] Add ILogger
   - [x] Add ConsoleLogger fallback
+  - [x] Add InvocationTargetException caused by logging
 - [x] InnoConfig
   - [x] Unit Tests
 - [x] Dependency Injection + Service Locator Framework
@@ -11,11 +12,12 @@
   - [x] Direct Subclass support in GetService
   - [x] Direct Super support in GetServicesWithInterface
   - [x] Interface and super interface support in GetService
-  - [ ] Add multi-constructor support (order by params, iterate till we can satisfy one constructor)
+  - [ ] Add multi-constructor support (order by params, iterate till we 
+can satisfy one constructor)
   - [ ] Add @ServiceConstructor for manually setting which constructor to use
 - [ ] JDAInteractionSystem
   - [x] InteractionConfig
-  - [ ] InteractionService
+  - [x] InteractionService
   - [x] Interaction Registration (to discord)
   - [x] ModuleDescriptor
   - [x] Module Registration
@@ -25,34 +27,21 @@
     - [x] Slash Commands
     - [ ] Text Commands
     - [ ] Context Commands
-    - [ ] Component Interactions
+    - [x] Component Interactions
     - [ ] Guild Permissions (Opt)
     - [ ] Preconditions (Opt)
     - [ ] Autocompletes (Opt)
     - [ ] TypeConverters (Opt)
-  - [ ] Unit Tests
+  - [ ] Add Module Name Safety (2 elements cannot have the same name)
+  - [ ] Add Component Method Parameter Safety
 - [ ] InnoHangmanBot
   - [x] GameInstanceManager
     - [ ] Add DMs support (if guildID == 0 then it's a private channel)
-    - [ ] Unit Tests
-  - [ ] HangmanService
-    - [ ] Unit Tests
+    - [ ] Add Timeout
+  - [x] HangmanService
+    - [ ] Add Game Limits
+    - [ ] Add DMs support
   - [ ] Add Game Settings To Config
-- [ ] Error Handling
-  - [ ] ExceptionService
-    - [ ] Unit Tests
-  - [ ] InnoLogger
-  - [ ] InnoConfig
-  - [ ] DependencyInjection
-  - [ ] JDAInteractionSystem
-  - [ ] DataSystem
-  - [ ] InnoHangmanBot
-  - [ ] Error Unit Tests
-    - [ ] InnoConfig
-    - [ ] DependencyInjection
-    - [ ] JDAInteractionSystem
-    - [ ] DataSystem
-    - [ ] InnoHangmanBot
 - [ ] DataSystem (Want) (Use configs first)
   - [ ] DataService
   - [x] Database (abstract)
