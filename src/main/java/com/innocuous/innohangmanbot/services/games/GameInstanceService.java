@@ -225,13 +225,13 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     public int InstancesWithGuild(Long guildID)
     {
         if (guildID == 0) return 0;
-        return _data.instances.values().stream().filter(x -> x.guildID.equals(guildID)).toList().size();
+        return _data.instances.values().stream().filter(x -> x.superChannelID.equals(guildID)).toList().size();
     }
 
     public int InstancesWithChannel(Long channelID)
     {
         if (channelID == 0) return 0;
-        return _data.instances.values().stream().filter(x -> x.channelID.equals(channelID)).toList().size();
+        return _data.instances.values().stream().filter(x -> x.superChannelID.equals(channelID)).toList().size();
     }
 
     public MessageChannel GetMessageChannel(GameInstance instance)

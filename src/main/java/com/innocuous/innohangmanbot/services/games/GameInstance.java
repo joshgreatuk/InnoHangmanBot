@@ -19,6 +19,7 @@ public class GameInstance
     public String instanceID;
 
     public Long guildID;
+    public Long superChannelID;
     public Long channelID;
     public Long currentMessageID = 0L;
 
@@ -40,5 +41,11 @@ public class GameInstance
         this.channelID = channelID;
         this.messageSupplier = messageSupplier;
         this.messageSupplierString = messageSupplierString;
+        this.superChannelID = channelID;
+    }
+    public GameInstance(String instanceID, Long guildID, Long channelID, Long superChannelID, Function<GameInstance, MessageCreateBuilder> messageSupplier, String messageSupplierString)
+    {
+        this(instanceID, guildID, channelID, messageSupplier, messageSupplierString);
+        this.superChannelID = superChannelID;
     }
 }

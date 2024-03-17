@@ -62,10 +62,10 @@ public class HangmanService extends InnoService
     private final GameInstanceService _instanceService;
     private final Random _random;
 
-    public void StartGameSetup(String gameID, Long guildID, Long channelID)
+    public void StartGameSetup(String gameID, Long guildID, Long channelID, Long superChannelID)
     {
         //Create instance, refresh message. Thread created by Module
-        _instanceService.RegisterInstance(new HangmanInstance(gameID, guildID, channelID, this::SupplySetupScreen, "SupplySetupScreen"));
+        _instanceService.RegisterInstance(new HangmanInstance(gameID, guildID, channelID, superChannelID, this::SupplySetupScreen, "SupplySetupScreen"));
     }
 
     public void StartGame(String gameID)
@@ -99,7 +99,6 @@ public class HangmanService extends InnoService
     {
         //Return if guess is correct
         HangmanInstance instance = (HangmanInstance)_instanceService.GetInstance(gameID);
-        instance.guessesRemaining--;
         if (guess.length() < 2)
         {
             //Guess letter
@@ -114,7 +113,7 @@ public class HangmanService extends InnoService
             instance.wrongChars.add(guess.charAt(0));
             _instanceService.RefreshInstance(gameID);
             instance.guessesRemaining--;
-            if (instance.guessesRemaining == 0)
+            if (instance.guessesRemaining <= 0)
             {
                 EndGame(gameID, HangmanStatus.Lost);
             }

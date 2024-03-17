@@ -32,12 +32,18 @@ public class HangmanModule extends JDAModuleBase
     @SlashCommand(name = "create-game", description = "Create a hangman game in a new thread")
     public void SetupGameCommand()
     {
+        if (commandInteraction.getChannelType().isThread())
+        {
+            FailGuess("You can't create a new game in a game thread!", true);
+            return;
+        }
+
         if (_hangmanService.InstancesWithGuild(commandInteraction.getGuild().getIdLong()) >= 15)
         {
             FailGuess("Sorry, you can only have 15 active hangman instances in 1 guild at a time", true);
             return;
         }
-        else if (_hangmanService.InstancesWithChannel(commandInteraction.getChannelIdLong()) > 3)
+        else if (_hangmanService.InstancesWithChannel(commandInteraction.getChannelIdLong()) >= 3)
         {
             FailGuess("Sorry, you can only have 3 active hangman instances per channel at a time)", true);
             return;
@@ -56,7 +62,7 @@ public class HangmanModule extends JDAModuleBase
         }
 
         String newGameID = _hangmanService.GenerateHangmanGameID(commandInteraction.getGuild().getIdLong(), channelID);
-        _hangmanService.StartGameSetup(newGameID, commandInteraction.getGuild().getIdLong(), channelID);
+        _hangmanService.StartGameSetup(newGameID, commandInteraction.getGuild().getIdLong(), channelID, commandInteraction.getChannelIdLong());
     }
 
     @SlashCommand(name = "guess", description = "Make a guess")

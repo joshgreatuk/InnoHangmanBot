@@ -9,9 +9,9 @@ import java.util.function.Function;
 public class HangmanInstance extends GameInstance
 {
     public HangmanInstance() { }
-    public HangmanInstance(String instanceID, Long guildID, Long channelID, Function<GameInstance, MessageCreateBuilder> messageSupplier, String messageSupplierString)
+    public HangmanInstance(String instanceID, Long guildID, Long channelID, Long superChannelID, Function<GameInstance, MessageCreateBuilder> messageSupplier, String messageSupplierString)
     {
-        super(instanceID, guildID, channelID, messageSupplier, messageSupplierString);
+        super(instanceID, guildID, channelID, superChannelID, messageSupplier, messageSupplierString);
 
         this.category = category;
         this.word = word;
