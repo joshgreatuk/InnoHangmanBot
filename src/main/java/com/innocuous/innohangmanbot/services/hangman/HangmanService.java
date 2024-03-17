@@ -106,6 +106,12 @@ public class HangmanService extends InnoService
             {
                 instance.rightChars.add(guess.charAt(0));
                 _instanceService.RefreshInstance(gameID);
+
+                if (instance.word.chars().allMatch(x -> instance.rightChars.contains((char)x)))
+                {
+                    EndGame(gameID, HangmanStatus.Won);
+                }
+
                 return true;
             }
 
