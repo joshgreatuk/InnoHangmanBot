@@ -7,6 +7,7 @@ import com.innocuous.innohangmanbot.services.games.GameInstanceService;
 import com.innocuous.innologger.ILogger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.interactions.commands.CommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -145,6 +146,16 @@ public class HangmanService extends InnoService
         return instance.wrongChars.contains(character) || instance.rightChars.contains(character);
     }
 
+    public int InstancesWithGuild(Long guildID)
+    {
+        return _instanceService.InstancesWithGuild(guildID);
+    }
+
+    public int InstancesWithChannel(Long channelID)
+    {
+        return _instanceService.InstancesWithChannel(channelID);
+    }
+
     public Boolean GameExists(String gameID)
     {
         return _instanceService.InstanceExists(gameID);
@@ -177,12 +188,11 @@ public class HangmanService extends InnoService
         _instanceService.RefreshInstance(gameID);
     }
 
-    public void DontPlayAgain(String gameID, ThreadChannel channel)
+    public void DontPlayAgain(String gameID)
     {
         _instanceService.SetInstanceSupplier(gameID, this::SupplyThankYouScreen, "SupplyThankYouScreen");
         _instanceService.RefreshInstance(gameID);
 
-        channel.getManager().setLocked(true).setArchived(true).queue();
         _instanceService.CloseInstance(gameID);
     }
 

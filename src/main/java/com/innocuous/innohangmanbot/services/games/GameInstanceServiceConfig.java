@@ -1,6 +1,7 @@
 package com.innocuous.innohangmanbot.services.games;
 
 import com.innocuous.innoconfig.InnoConfigBase;
+import com.innocuous.jdamodulesystem.InteractionService;
 
 public class GameInstanceServiceConfig extends InnoConfigBase
 {
@@ -10,4 +11,5 @@ public class GameInstanceServiceConfig extends InnoConfigBase
     }
 
     public Boolean removeOldMessages = true;
+    public Integer timeoutMinutes = 60;
 }

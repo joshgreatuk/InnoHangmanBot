@@ -6,20 +6,23 @@ import com.innocuous.innohangmanbot.services.InnoService;
 import com.innocuous.innologger.ILogger;
 import com.innocuous.innologger.LogMessage;
 import com.innocuous.innologger.LogSeverity;
+import net.bytebuddy.asm.Advice;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -36,10 +39,20 @@ public class GameInstanceService extends InnoService implements IInitializable, 
 
         _data = data;
         _data.Init();
+
+        long delay = 1000L * 60L * _config.timeoutMinutes;
+        _instanceTimeoutTimer = new Timer();
+        _instanceTimeoutTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                CheckTimeouts();
+            }
+        }, delay, delay);
     }
 
     private final GameInstanceServiceConfig _config;
     private final GameInstanceData _data;
+    private final Timer _instanceTimeoutTimer;
     private JDA jda;
 
     @Override
@@ -56,6 +69,8 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     @Override
     public void Shutdown()
     {
+        _instanceTimeoutTimer.cancel();
+
         //Remove components and add Shutdown message to all instances
         for (GameInstance instance : _data.instances.values())
         {
@@ -135,13 +150,15 @@ public class GameInstanceService extends InnoService implements IInitializable, 
             return;
         }
 
-        GuildMessageChannel channel = GetMessageChannel(instance);
+        MessageChannel channel = GetMessageChannel(instance);
         if (channel == null)
         {
             _logger.Log(new LogMessage(this, "Guild and/or Channel don't exist, closing instance '" + instanceID + "'", LogSeverity.Debug));
             CloseInstance(instanceID);
             return;
         }
+
+        instance.lastInteracted = LocalDateTime.now();
 
         //If there is a message, grab it and update it using the supplier
         if (instance.currentMessageID != 0)
@@ -205,14 +222,35 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         return _data.instances.containsKey(instanceID);
     }
 
-    public GuildMessageChannel GetMessageChannel(GameInstance instance)
+    public int InstancesWithGuild(Long guildID)
+    {
+        if (guildID == 0) return 0;
+        return _data.instances.values().stream().filter(x -> x.guildID.equals(guildID)).toList().size();
+    }
+
+    public int InstancesWithChannel(Long channelID)
+    {
+        if (channelID == 0) return 0;
+        return _data.instances.values().stream().filter(x -> x.channelID.equals(channelID)).toList().size();
+    }
+
+    public MessageChannel GetMessageChannel(GameInstance instance)
     {
         if (instance == null) return null;
 
-        Guild guild = jda.getGuildById(instance.guildID);
-        if (guild == null) return null;
+        MessageChannel channel;
+        if (instance.guildID != 0)
+        {
+            Guild guild = jda.getGuildById(instance.guildID);
+            if (guild == null) return null;
+            channel = guild.getChannelById(GuildMessageChannel.class, instance.channelID);
+        }
+        else
+        {
+            channel = jda.getPrivateChannelById(instance.channelID);
+        }
 
-        return guild.getChannelById(GuildMessageChannel.class, instance.channelID);
+        return channel;
     }
 
     public Message GetMessage(GameInstance instance, GuildMessageChannel channel)
@@ -226,9 +264,33 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     {
         if (instance.cachedMessage != null) return instance.cachedMessage;
 
-        GuildMessageChannel channel = GetMessageChannel(instance);
+        MessageChannel channel = GetMessageChannel(instance);
         if (channel == null || instance.currentMessageID == 0) return null;
 
         return channel.retrieveMessageById(instance.currentMessageID).complete();
+    }
+
+    private void CheckTimeouts()
+    {
+        _data.instances.values().stream()
+                .filter(x -> x.lastInteracted.plusMinutes(_config.timeoutMinutes).isBefore(LocalDateTime.now()))
+                .forEach(y -> TimeoutInstance(y.instanceID));
+    }
+
+    public void TimeoutInstance(String instanceID)
+    {
+        _logger.Log(new LogMessage(this, "Instance '" + instanceID + "' timed out"));
+        SetInstanceSupplier(instanceID, this::SupplyTimeoutPage, "SupplyTimeoutPage");
+        RefreshInstance(instanceID);
+        CloseInstance(instanceID);
+    }
+
+    private MessageCreateBuilder SupplyTimeoutPage(GameInstance instance)
+    {
+        return new MessageCreateBuilder()
+                .addEmbeds(new EmbedBuilder()
+                        .setTitle("Game Timed Out")
+                        .setDescription("Game hasn't been interacted with in " + _config.timeoutMinutes + " minutes")
+                        .build());
     }
 }

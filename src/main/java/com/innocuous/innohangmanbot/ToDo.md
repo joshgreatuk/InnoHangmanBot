@@ -34,14 +34,15 @@ can satisfy one constructor)
     - [ ] TypeConverters (Opt)
   - [ ] Add Module Name Safety (2 elements cannot have the same name)
   - [ ] Add Component Method Parameter Safety
-- [ ] InnoHangmanBot
+  - [x] Run modules async
+- [x] InnoHangmanBot
   - [x] GameInstanceManager
-    - [ ] Add DMs support (if guildID == 0 then it's a private channel)
-    - [ ] Add Timeout
+    - [x] Add DMs support (if guildID == 0 then it's a private channel)
+    - [x] Add Timeout
   - [x] HangmanService
-    - [ ] Add Game Limits
-    - [ ] Add DMs support
-  - [ ] Add Game Settings To Config
+    - [x] Add Game Limits
+    - [x] Add DMs support
+  - [x] Add Game Settings To Config
 - [ ] DataSystem (Want) (Use configs first)
   - [ ] DataService
   - [x] Database (abstract)

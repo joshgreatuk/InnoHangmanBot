@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 
+import java.time.LocalDateTime;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -23,6 +24,9 @@ public class GameInstance
 
     @JsonIgnore
     public Message cachedMessage;
+
+    @JsonIgnore
+    public LocalDateTime lastInteracted;
 
     @JsonIgnore
     public Function<GameInstance, MessageCreateBuilder> messageSupplier;

@@ -33,6 +33,7 @@ import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -460,7 +461,18 @@ public class InteractionService
     {
         try
         {
-            targetMethod.invoke(instance, params);
+            Thread invocationThread = new Thread(() ->
+            {
+                try
+                {
+                    targetMethod.invoke(instance, params);
+                }
+                catch (IllegalAccessException | InvocationTargetException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            });
+            invocationThread.start();
         }
         catch (Exception ex)
         {

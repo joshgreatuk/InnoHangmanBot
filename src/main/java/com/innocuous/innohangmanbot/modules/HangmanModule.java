@@ -10,7 +10,9 @@ import com.innocuous.jdamodulesystem.annotations.components.StringSelectComponen
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 
@@ -30,14 +32,31 @@ public class HangmanModule extends JDAModuleBase
     @SlashCommand(name = "create-game", description = "Create a hangman game in a new thread")
     public void SetupGameCommand()
     {
+        if (_hangmanService.InstancesWithGuild(commandInteraction.getGuild().getIdLong()) >= 15)
+        {
+            FailGuess("Sorry, you can only have 15 active hangman instances in 1 guild at a time", true);
+            return;
+        }
+        else if (_hangmanService.InstancesWithChannel(commandInteraction.getChannelIdLong()) > 3)
+        {
+            FailGuess("Sorry, you can only have 3 active hangman instances per channel at a time)", true);
+            return;
+        }
+
         InteractionHook hook = commandInteraction.reply("Creating game!").complete();
         Message message = hook.retrieveOriginal().complete();
-        ThreadChannel channel = message.createThreadChannel("Hangman!").complete();
-        channel.join().queue();
-        channel.addThreadMember(commandInteraction.getUser()).queue();
+        long channelID = commandInteraction.getChannelIdLong();
 
-        String newGameID = _hangmanService.GenerateHangmanGameID(channel.getGuild().getIdLong(), channel.getIdLong());
-        _hangmanService.StartGameSetup(newGameID, channel.getGuild().getIdLong(), channel.getIdLong());
+        if (commandInteraction.isFromGuild())
+        {
+            ThreadChannel channel = message.createThreadChannel("Hangman!").complete();
+            channelID = channel.getIdLong();
+            channel.join().queue();
+            channel.addThreadMember(commandInteraction.getUser()).queue();
+        }
+
+        String newGameID = _hangmanService.GenerateHangmanGameID(commandInteraction.getGuild().getIdLong(), channelID);
+        _hangmanService.StartGameSetup(newGameID, commandInteraction.getGuild().getIdLong(), channelID);
     }
 
     @SlashCommand(name = "guess", description = "Make a guess")
@@ -45,7 +64,7 @@ public class HangmanModule extends JDAModuleBase
     {
         if (!_hangmanService.GameExists(GetGameID()))
         {
-            commandInteraction.reply("Please create a game with /create-game first").setEphemeral(true).queue();
+            FailGuess("Please create a game with /create-game first", true);
             return;
         }
 
@@ -107,7 +126,7 @@ public class HangmanModule extends JDAModuleBase
     {
         if (!_hangmanService.GameExists(GetGameID()))
         {
-            commandInteraction.reply("Please create a game with /create-game first").setEphemeral(true).queue();
+            FailGuess("Please create a game with /create-game first", true);
             return;
         }
 
@@ -123,8 +142,11 @@ public class HangmanModule extends JDAModuleBase
         componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
         String selected = selectedCategory.get(0);
         _hangmanService.UpdateGameCategory(GetGameID(), selected);
-        ThreadChannel channel = (ThreadChannel)componentInteraction.getMessageChannel();
-        channel.getManager().setName("Hangman! Category: "+selected).queue();
+        if (componentInteraction.isFromGuild())
+        {
+            ThreadChannel channel = (ThreadChannel) componentInteraction.getMessageChannel();
+            channel.getManager().setName("Hangman! Category: " + selected).queue();
+        }
     }
 
     @ButtonComponent(customID = "hangman.start-game")
@@ -154,7 +176,12 @@ public class HangmanModule extends JDAModuleBase
     public void DontPlayAgainButton()
     {
         componentInteraction.editMessage(new MessageEditBuilder().setSuppressEmbeds(false).build()).queue();
-        _hangmanService.DontPlayAgain(GetGameID(), (ThreadChannel)componentInteraction.getChannel());
+        _hangmanService.DontPlayAgain(GetGameID());
+
+        if (componentInteraction.isFromGuild())
+        {
+            ((ThreadChannel) componentInteraction.getChannel()).getManager().setLocked(true).setArchived(true).queue();
+        }
 
     }
 
