@@ -36,9 +36,9 @@ public class HangmanModule extends JDAModuleBase
     @SlashCommand(name = "create-game", description = "Create a hangman game in a new thread")
     public void SetupGameCommand()
     {
-        if (PermissionUtil.checkPermission(
+        if (commandInteraction.isFromGuild() && PermissionUtil.checkPermission(
                 (IPermissionContainer) commandInteraction.getChannel(),
-                (Member) commandInteraction.getJDA().getSelfUser(),
+                commandInteraction.getGuild().getMember(commandInteraction.getJDA().getSelfUser()),
                 Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.CREATE_PUBLIC_THREADS))
         {
             FailGuess("Bot needs VIEW_CHANNEL, MESSAGE_SEND, MESSAGE_SEND_IN_THREADS and CREATE_PUBLIC_THREADS", true);
