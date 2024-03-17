@@ -41,13 +41,14 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         _data.Init();
 
         long delay = 1000L * 60L * _config.timeoutMinutes;
+        long extraFive = 1000L * 60L * 5;
         _instanceTimeoutTimer = new Timer();
         _instanceTimeoutTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 CheckTimeouts();
             }
-        }, delay, delay);
+        }, delay+extraFive, delay);
     }
 
     private final GameInstanceServiceConfig _config;
@@ -225,13 +226,13 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     public int InstancesWithGuild(Long guildID)
     {
         if (guildID == 0) return 0;
-        return _data.instances.values().stream().filter(x -> x.superChannelID.equals(guildID)).toList().size();
+        return _data.instances.values().stream().filter(x -> x.guildID != null && x.guildID.equals(guildID)).toList().size();
     }
 
     public int InstancesWithChannel(Long channelID)
     {
         if (channelID == 0) return 0;
-        return _data.instances.values().stream().filter(x -> x.superChannelID.equals(channelID)).toList().size();
+        return _data.instances.values().stream().filter(x -> x.superChannelID != null && x.superChannelID.equals(channelID)).toList().size();
     }
 
     public MessageChannel GetMessageChannel(GameInstance instance)

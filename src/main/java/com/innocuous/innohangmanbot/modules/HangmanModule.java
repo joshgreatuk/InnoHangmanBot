@@ -138,14 +138,14 @@ public class HangmanModule extends JDAModuleBase
 
         //End the game
         _hangmanService.EndGame(GetGameID(), HangmanStatus.Cancelled);
-        commandInteraction.reply("Ending game!").queue();
+        commandInteraction.reply("Ending game!").complete().deleteOriginal().queue();
     }
 
     //Game Setup Page
     @StringSelectComponent(customID = "hangman.select-category")
     public void SelectWordCategory(List<String> selectedCategory)
     {
-        componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
+        componentInteraction.reply("Category Selected!").complete().deleteOriginal().queue();
         String selected = selectedCategory.get(0);
         _hangmanService.UpdateGameCategory(GetGameID(), selected);
         if (componentInteraction.isFromGuild())
@@ -158,14 +158,14 @@ public class HangmanModule extends JDAModuleBase
     @ButtonComponent(customID = "hangman.start-game")
     public void StartGameButton()
     {
-        componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
+        componentInteraction.reply("Starting game!").complete().deleteOriginal().queue();
         _hangmanService.StartGame(GetGameID());
     }
 
     @ButtonComponent(customID = "hangman.cancel-game")
     public void CancelGameButton()
     {
-        componentInteraction.editMessage(new MessageEditBuilder().setContent("Closing").build()).queue();
+        componentInteraction.reply("Ending game!").complete().deleteOriginal().queue();
         _hangmanService.EndGame(GetGameID(), HangmanStatus.Cancelled);
 
     }
@@ -175,13 +175,13 @@ public class HangmanModule extends JDAModuleBase
     public void PlayAgainButton()
     {
         _hangmanService.PlayAgain(GetGameID());
-        componentInteraction.editMessage(new MessageEditBuilder().setSuppressEmbeds(false).build()).queue();
+        componentInteraction.reply("Playing again!").complete().deleteOriginal().queue();
     }
 
     @ButtonComponent(customID = "hangman.playagain:no")
     public void DontPlayAgainButton()
     {
-        componentInteraction.editMessage(new MessageEditBuilder().setSuppressEmbeds(false).build()).queue();
+        componentInteraction.reply("Ending instance!").complete().deleteOriginal().queue();
         _hangmanService.DontPlayAgain(GetGameID());
 
         if (componentInteraction.isFromGuild())
