@@ -275,10 +275,10 @@ public class GameInstanceService extends InnoService implements IInitializable, 
 
     private void CheckTimeouts()
     {
-        _data.instances.values().stream()
+        List<String> ids = _data.instances.values().stream()
                 .filter(x -> x.lastInteracted.plusMinutes(_config.timeoutMinutes).isBefore(LocalDateTime.now()))
-                .map(x -> x.instanceID)
-                .forEach(y -> TimeoutInstance(y));
+                .map(x -> x.instanceID).toList();
+        ids.forEach(this::TimeoutInstance);
 
         _config.SaveFile(_config);
     }

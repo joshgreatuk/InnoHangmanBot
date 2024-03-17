@@ -1,32 +1,3 @@
 {
-  "instances" : {
-    "Hangman.1096556224167825408.1218925538542878734" : {
-      "instanceID" : "Hangman.1096556224167825408.1218925538542878734",
-      "guildID" : 1096556224167825408,
-      "superChannelID" : null,
-      "channelID" : 1218925538542878734,
-      "currentMessageID" : 1218943447533359194,
-      "messageSupplierString" : "SupplyEndScreen",
-      "category" : "Countries",
-      "word" : "germany",
-      "status" : "Lost",
-      "guessesRemaining" : 0,
-      "rightChars" : [ "y", "a", "g" ],
-      "wrongChars" : [ "z", "x", "h", "b", "c", "d", "f", "p", "u", "o", "l" ]
-    },
-    "Hangman.1096556224167825408.1218926628931899443" : {
-      "instanceID" : "Hangman.1096556224167825408.1218926628931899443",
-      "guildID" : 1096556224167825408,
-      "superChannelID" : null,
-      "channelID" : 1218926628931899443,
-      "currentMessageID" : 1218943449470865559,
-      "messageSupplierString" : "SupplySetupScreen",
-      "category" : "Animals",
-      "word" : null,
-      "status" : "Running",
-      "guessesRemaining" : 10,
-      "rightChars" : [ ],
-      "wrongChars" : [ ]
-    }
-  }
+  "instances" : { }
 }
