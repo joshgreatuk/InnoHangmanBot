@@ -51,7 +51,7 @@ public class HangmanService extends InnoService
             {
                 case "SupplySetupScreen" -> this::SupplySetupScreen;
                 case "SupplyGame" -> this::SupplyGame;
-                case "SupplyEndGame" -> this::SupplyEndScreen;
+                case "SupplyEndScreen" -> this::SupplyEndScreen;
                 case "SupplyThankYouScreen" -> this::SupplyThankYouScreen;
                 default -> null;
             };
@@ -179,7 +179,7 @@ public class HangmanService extends InnoService
     public void PlayAgain(String gameID)
     {
         HangmanInstance instance = (HangmanInstance)_instanceService.GetInstance(gameID);
-        instance.guessesRemaining = 11;
+        instance.guessesRemaining = 10;
         instance.wrongChars.clear();
         instance.rightChars.clear();
 
@@ -239,7 +239,7 @@ public class HangmanService extends InnoService
                         .setDescription("```\n"+String.join("", hangmanInstance.word.chars().map(x ->
                                 hangmanInstance.rightChars.contains((char)x) ? x :
                                         (char)x == ' ' ? ' ' : '_').mapToObj(Character::toString).toList()) + "\n"
-                                + _config.hangmanStages[11-hangmanInstance.guessesRemaining]+"\nGuessed: "
+                                + _config.hangmanStages[10-hangmanInstance.guessesRemaining]+"\nGuessed: "
                                 + String.join(", ", hangmanInstance.wrongChars.stream().map(x -> x.toString()).toList())+"```")
                         .setColor(hangmanInstance.status.getColour())
                         .setFooter("Use /guess or /end-game")
@@ -252,7 +252,9 @@ public class HangmanService extends InnoService
         return new MessageCreateBuilder()
                 .addEmbeds(new EmbedBuilder()
                         .setTitle(hangmanInstance.status.getTitle() + (hangmanInstance.status == HangmanStatus.Lost ? hangmanInstance.word : ""))
-                        .setDescription("Would you like to play again?")
+                        .setDescription((hangmanInstance.status == HangmanStatus.Lost ?
+                                "```\n"+_config.hangmanStages[10] + "```\n" : "") +
+                                "Would you like to play again?")
                         .setColor(hangmanInstance.status.getColour())
                         .build())
                 .addActionRow(Button.of(ButtonStyle.PRIMARY, "hangman.playagain:yes", "Yes"),

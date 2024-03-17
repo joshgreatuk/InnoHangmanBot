@@ -21,7 +21,7 @@ public class HangmanInstance extends GameInstance
     public String word;
     public HangmanStatus status = HangmanStatus.Running;
 
-    public Integer guessesRemaining = 11;
+    public Integer guessesRemaining = 10;
 
     public ArrayList<Character> rightChars = new ArrayList<>();
     public ArrayList<Character> wrongChars = new ArrayList<>();
