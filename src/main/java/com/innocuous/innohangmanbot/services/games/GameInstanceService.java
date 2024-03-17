@@ -12,12 +12,14 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
+import org.apache.commons.collections4.Get;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -275,7 +277,8 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     {
         _data.instances.values().stream()
                 .filter(x -> x.lastInteracted.plusMinutes(_config.timeoutMinutes).isBefore(LocalDateTime.now()))
-                .forEach(y -> TimeoutInstance(y.instanceID));
+                .map(x -> x.instanceID)
+                .forEach(y -> TimeoutInstance(y));
 
         _config.SaveFile(_config);
     }
@@ -285,6 +288,14 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         _logger.Log(new LogMessage(this, "Instance '" + instanceID + "' timed out"));
         SetInstanceSupplier(instanceID, this::SupplyTimeoutPage, "SupplyTimeoutPage");
         RefreshInstance(instanceID);
+        //Get the channel, if it is a thread, lock and archive it
+        GameInstance instance = GetInstance(instanceID);
+        MessageChannel channel = GetMessageChannel(instance);
+        if (channel.getType().isThread())
+        {
+            ThreadChannel thread = (ThreadChannel)channel;
+            thread.getManager().setLocked(true).setArchived(true).queue();;
+        }
         CloseInstance(instanceID);
     }
 

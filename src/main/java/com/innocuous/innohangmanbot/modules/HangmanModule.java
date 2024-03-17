@@ -38,7 +38,7 @@ public class HangmanModule extends JDAModuleBase
             return;
         }
 
-        if (_hangmanService.InstancesWithGuild(commandInteraction.getGuild().getIdLong()) >= 15)
+        if (commandInteraction.isFromGuild() && _hangmanService.InstancesWithGuild(commandInteraction.getGuild().getIdLong()) >= 15)
         {
             FailGuess("Sorry, you can only have 15 active hangman instances in 1 guild at a time", true);
             return;
@@ -52,6 +52,7 @@ public class HangmanModule extends JDAModuleBase
         InteractionHook hook = commandInteraction.reply("Creating game!").complete();
         Message message = hook.retrieveOriginal().complete();
         long channelID = commandInteraction.getChannelIdLong();
+        long guildID = 0;
 
         if (commandInteraction.isFromGuild())
         {
@@ -59,10 +60,11 @@ public class HangmanModule extends JDAModuleBase
             channelID = channel.getIdLong();
             channel.join().queue();
             channel.addThreadMember(commandInteraction.getUser()).queue();
+            guildID = commandInteraction.getGuild().getIdLong();
         }
 
-        String newGameID = _hangmanService.GenerateHangmanGameID(commandInteraction.getGuild().getIdLong(), channelID);
-        _hangmanService.StartGameSetup(newGameID, commandInteraction.getGuild().getIdLong(), channelID, commandInteraction.getChannelIdLong());
+        String newGameID = _hangmanService.GenerateHangmanGameID(guildID, channelID);
+        _hangmanService.StartGameSetup(newGameID, guildID, channelID, commandInteraction.getChannelIdLong());
     }
 
     @SlashCommand(name = "guess", description = "Make a guess")
@@ -194,10 +196,10 @@ public class HangmanModule extends JDAModuleBase
     private String GetGameID()
     {
         return commandInteraction != null ? _hangmanService.GenerateHangmanGameID(
-                commandInteraction.getGuild().getIdLong(),
+                (commandInteraction.isFromGuild() ? commandInteraction.getGuild().getIdLong() : 0),
                 commandInteraction.getChannelIdLong())
                 : _hangmanService.GenerateHangmanGameID(
-                        componentInteraction.getGuild().getIdLong(),
+                (componentInteraction.isFromGuild() ? componentInteraction.getGuild().getIdLong() : 0),
                 componentInteraction.getChannelIdLong());
     }
 }
