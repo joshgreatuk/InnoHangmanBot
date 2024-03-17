@@ -30,6 +30,6 @@ public class ModuleRegistrationService extends InnoService implements IInitializ
     {
         _interactionService.setJDA(readyEvent.getJDA());
         _interactionService.AddModules(List.of(moduleClases));
-        _interactionService.RegisterModulesToGuild(0L); //Auto register fires before this, so register manually
+        _interactionService.RegisterModulesGlobally(); //Auto register fires before this, so register manually
     }
 }

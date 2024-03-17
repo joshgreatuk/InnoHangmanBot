@@ -276,6 +276,8 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         _data.instances.values().stream()
                 .filter(x -> x.lastInteracted.plusMinutes(_config.timeoutMinutes).isBefore(LocalDateTime.now()))
                 .forEach(y -> TimeoutInstance(y.instanceID));
+
+        _config.SaveFile(_config);
     }
 
     public void TimeoutInstance(String instanceID)
