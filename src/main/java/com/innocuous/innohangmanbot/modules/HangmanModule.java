@@ -8,13 +8,17 @@ import com.innocuous.jdamodulesystem.annotations.SlashCommand;
 import com.innocuous.jdamodulesystem.annotations.components.ButtonComponent;
 import com.innocuous.jdamodulesystem.annotations.components.StringSelectComponent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.CommandInteraction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 
 import java.awt.*;
 import java.util.List;
@@ -32,6 +36,14 @@ public class HangmanModule extends JDAModuleBase
     @SlashCommand(name = "create-game", description = "Create a hangman game in a new thread")
     public void SetupGameCommand()
     {
+        if (PermissionUtil.checkPermission(
+                (IPermissionContainer) commandInteraction.getChannel(),
+                (Member) commandInteraction.getJDA().getSelfUser(),
+                Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.CREATE_PUBLIC_THREADS))
+        {
+            FailGuess("Bot needs VIEW_CHANNEL, MESSAGE_SEND, MESSAGE_SEND_IN_THREADS and CREATE_PUBLIC_THREADS", true);
+        }
+
         if (commandInteraction.getChannelType().isThread())
         {
             FailGuess("You can't create a new game in a game thread!", true);

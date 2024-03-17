@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/HangmanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/HangmanService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/data/HangmanBotConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/data/HangmanBotConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/modules/HangmanModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/modules/HangmanModule.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,36 +76,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Gradle.Build InnoHangmanBot.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.InnoConfigBaseTest.loadFile.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.InnoConfigBaseTest.saveFile.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.InnoHangmanBot [shadowJar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.InnoHangmanBot [test].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.InnoHangmanBot.executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.Execute InnoHangmanBot-1.0-all.jar.executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.InnoHangmanBot-1.0-all.jar.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.JUnit Tests.executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/joahg/OneDrive/Documents/Elite Pixel Studios/Bots/InnoHangmanBot/src/main/java/com/innocuous/datasystem&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.Build InnoHangmanBot.executor": "Run",
+    "Gradle.InnoConfigBaseTest.loadFile.executor": "Run",
+    "Gradle.InnoConfigBaseTest.saveFile.executor": "Run",
+    "Gradle.InnoHangmanBot [shadowJar].executor": "Run",
+    "Gradle.InnoHangmanBot [test].executor": "Run",
+    "Gradle.InnoHangmanBot.executor": "Run",
+    "JAR Application.Execute InnoHangmanBot-1.0-all.jar.executor": "Run",
+    "JAR Application.InnoHangmanBot-1.0-all.jar.executor": "Run",
+    "JUnit.JUnit Tests.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/joahg/OneDrive/Documents/Elite Pixel Studios/Bots/InnoHangmanBot/src/main/java/com/innocuous/datasystem",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\joahg\OneDrive\Documents\Elite Pixel Studios\Bots\InnoHangmanBot\src\main\java\com\innocuous\datasystem" />
