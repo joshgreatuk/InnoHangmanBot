@@ -176,14 +176,12 @@ public class GameInstanceService extends InnoService implements IInitializable, 
                 existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.apply(instance).build())).queue();
                 return;
             }
-            instance.cachedMessage = null;
             instance.currentMessageID = 0L;
         }
 
         //If no message, create message using supplier
         Message message = channel.sendMessage(instance.messageSupplier.apply(instance).build()).complete();
         instance.currentMessageID = message.getIdLong();
-        instance.cachedMessage = message;
     }
 
 
@@ -255,7 +253,6 @@ public class GameInstanceService extends InnoService implements IInitializable, 
 
     public Message GetMessage(GameInstance instance, GuildMessageChannel channel)
     {
-        if (instance.cachedMessage != null) return instance.cachedMessage;
         if (channel == null) return null;
 
         return channel.getHistory().getMessageById(instance.currentMessageID);
@@ -264,8 +261,6 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     {
         MessageChannel channel = GetMessageChannel(instance);
         if (channel == null || instance.currentMessageID == 0) return null;
-
-        if (instance.cachedMessage != null) return instance.cachedMessage;
 
         return channel.retrieveMessageById(instance.currentMessageID).complete();
     }

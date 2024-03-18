@@ -24,9 +24,6 @@ public class GameInstance
     public Long currentMessageID = 0L;
 
     @JsonIgnore
-    public Message cachedMessage;
-
-    @JsonIgnore
     public LocalDateTime lastInteracted;
 
     @JsonIgnore
