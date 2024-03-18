@@ -1,4 +1,5 @@
 # InnoHangmanBot To-Do
+- TOTAL - 32h = 4d
 - [x] Bot base
 - [x] InnoLogger
   - [x] Improve error logging
@@ -7,33 +8,35 @@
   - [x] Add InvocationTargetException caused by logging
 - [x] InnoConfig
   - [x] Unit Tests
-- [x] Dependency Injection + Service Locator Framework
+- [x] Dependency Injection + Service Locator Framework (7h = 1d)
   - [x] Unit Tests
   - [x] Direct Subclass support in GetService
   - [x] Direct Super support in GetServicesWithInterface
   - [x] Interface and super interface support in GetService
-  - [ ] Add multi-constructor support (order by params, iterate till we 
-can satisfy one constructor)
-  - [ ] Add @ServiceConstructor for manually setting which constructor to use
-- [ ] JDAInteractionSystem
+  - [ ] Add @ServiceConstructor for manually setting which constructor to use (1h)
+  - [ ] Tighter restrictions, better logging (3h)
+  - [ ] Documentation (3h)
+- [ ] JDAInteractionSystem (25h = 3d)
   - [x] InteractionConfig
   - [x] InteractionService
   - [x] Interaction Registration (to discord)
   - [x] ModuleDescriptor
   - [x] Module Registration
   - [x] Nested Interactions (sub-commands / groups) 
-  - [ ] Modals Support (Opt)
-  - [ ] Annotations
+  - [ ] Modals Support (Opt) (1h)
+  - [ ] Annotations (14h = 2d)
     - [x] Slash Commands
-    - [ ] Text Commands
-    - [ ] Context Commands
-    - [x] Component Interactions
-    - [ ] Guild Permissions (Opt)
-    - [ ] Preconditions (Opt)
-    - [ ] Autocompletes (Opt)
-    - [ ] TypeConverters (Opt)
-  - [ ] Add Module Name Safety (2 elements cannot have the same name)
-  - [ ] Add Component Method Parameter Safety
+    - [ ] Text Commands (4h)
+    - [ ] Context Commands (1h)
+    - [x] Component Interactions 
+    - [ ] Guild Permissions (Opt) (1h)
+    - [ ] Preconditions (Opt) (2h)
+    - [ ] Autocompletes (Opt) (2h)
+    - [ ] TypeConverters (Opt) (4h)
+  - [ ] Add Module Name Safety (2 elements cannot have the same name) (1h)
+  - [ ] Add Component Method Parameter Safety (1h)
+  - [ ] Tighter restrictions, better logging (3h)
+  - [ ] Documentation (5h)
   - [x] Run modules async
 - [x] InnoHangmanBot
   - [x] GameInstanceManager

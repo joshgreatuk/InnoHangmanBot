@@ -166,18 +166,15 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         //If there is a message, grab it and update it using the supplier
         if (instance.currentMessageID != 0)
         {
-            Message existingMessage = channel.getHistory().getMessageById(instance.currentMessageID);
+            Message existingMessage = GetMessage(instance);
             if (_config.removeOldMessages && existingMessage != null)
             {
                 channel.deleteMessageById(instance.currentMessageID).queue();
             }
-            else if (!_config.removeOldMessages)
+            else if (!_config.removeOldMessages && existingMessage != null)
             {
-                if (existingMessage != null) {
-                    Message newMessage = existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.apply(instance).build())).complete();
-                    instance.cachedMessage = newMessage;
-                    return;
-                }
+                existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.apply(instance).build())).queue();
+                return;
             }
             instance.cachedMessage = null;
             instance.currentMessageID = 0L;

@@ -483,10 +483,10 @@ public class InteractionService
 
     private <T> T InstantiateModule(Class<?> moduleClass)
     {
-        Constructor[] constructors = moduleClass.getDeclaredConstructors();
+        Constructor<?>[] constructors = moduleClass.getDeclaredConstructors();
 
         //Take the first constructor
-        Constructor constructor = constructors[0];
+        Constructor<?> constructor = constructors[0];
         _logger.Log(new LogMessage(this, "Using constructor '" + constructor.toString() + "'", LogSeverity.Verbose));
         Object[] params = new Object[constructor.getParameterCount()];
         Class<?>[] paramTypes = constructor.getParameterTypes();
