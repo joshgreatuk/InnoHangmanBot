@@ -13,9 +13,10 @@ import com.innocuous.innologger.*;
 import com.innocuous.jdamodulesystem.InteractionService;
 import com.innocuous.jdamodulesystem.data.InteractionConfig;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class HangmanBot
         _config = _services.GetService(HangmanBotConfig.class);
         _config.Init();
         _logger = _services.GetService(InnoLoggerService.class);
-        JDABuilder client = _services.GetService(JDABuilder.class);
+        DefaultShardManagerBuilder client = _services.GetService(DefaultShardManagerBuilder.class);
         client.setEnableShutdownHook(false);
 
         String botToken = _config.debugMode ? _config.debugBotToken : _config.releaseBotToken;
@@ -62,15 +63,15 @@ public class HangmanBot
         try
         {
             //Add event listeners here
-            client.setEventManager(new AnnotatedEventManager());
+            client.setEventManagerProvider(x -> new AnnotatedEventManager());
             List<Object> listenerServices = _services.<Object>GetServicesWithInterface(IJDAEventListener.class);
             listenerServices.add(_services.GetService(InteractionService.class));
             for (Object listener : listenerServices) { client.addEventListeners(listener); }
 
             client.setStatus(OnlineStatus.ONLINE);
 
-            JDA instance = _services.GetService(JDA.class);
-            Log(new LogMessage(this, "Bot running"));
+            ShardManager instance = _services.GetService(ShardManager.class);
+            Log(new LogMessage(this, "Bot running with "+instance.getShardsTotal()+" shards"));
 
             _services.GetService(HangmanService.class);
 
@@ -92,8 +93,8 @@ public class HangmanBot
 
                 .AddSingletonService(InnoLoggerService.class)
 
-                .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
-                .AddSingletonService(JDA.class, x -> x.<JDABuilder>GetService(JDABuilder.class).build())
+                .AddSingletonService(DefaultShardManagerBuilder.class, x -> DefaultShardManagerBuilder.createDefault(""))
+                .AddSingletonService(ShardManager.class, x -> x.<DefaultShardManagerBuilder>GetService(DefaultShardManagerBuilder.class).build())
 
                 .AddSingletonService(InteractionService.class)
 
@@ -139,11 +140,11 @@ public class HangmanBot
 
         //Shutdown JDA
         _logger.Log(new LogMessage(this, "Shutting down JDA"));
-        JDA instance = _services.<JDA>GetService(JDA.class);
+        ShardManager instance = _services.GetService(ShardManager.class);
         instance.shutdown();
         try
         {
-            instance.awaitShutdown();
+            instance.shutdown();
         }
         catch (Exception ex)
         {

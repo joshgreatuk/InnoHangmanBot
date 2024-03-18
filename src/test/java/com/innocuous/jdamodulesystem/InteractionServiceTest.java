@@ -7,6 +7,7 @@ import com.innocuous.innologger.LogMessage;
 import com.innocuous.jdamodulesystem.data.InteractionConfig;
 import com.innocuous.jdamodulesystem.modules.TestModule;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +20,7 @@ class InteractionServiceTest
     void addModules()
     {
         services = new ServiceCollection()
-                .AddSingletonService(JDABuilder.class, x -> JDABuilder.createDefault(""))
+                .AddSingletonService(DefaultShardManagerBuilder.class, x -> DefaultShardManagerBuilder.createDefault(""))
                 .AddSingletonService(InteractionConfig.class)
                 .AddSingletonService(InteractionService.class)
                 .Build();

@@ -31,6 +31,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +41,7 @@ import java.util.*;
 
 public class InteractionService
 {
-    public InteractionService(ILogger logger, InteractionConfig config, JDABuilder jdaBuilder, IServiceProvider services)
+    public InteractionService(ILogger logger, InteractionConfig config, DefaultShardManagerBuilder jdaBuilder, IServiceProvider services)
     {
         _logger = logger;
         _config = (config == null ? new InteractionConfig() : config);
