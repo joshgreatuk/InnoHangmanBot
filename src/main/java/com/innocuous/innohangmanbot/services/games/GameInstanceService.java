@@ -283,7 +283,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         //Get the channel, if it is a thread, lock and archive it
         GameInstance instance = GetInstance(instanceID);
         MessageChannel channel = GetMessageChannel(instance);
-        if (channel.getType().isThread())
+        if (channel != null && channel.getType().isThread())
         {
             ThreadChannel thread = (ThreadChannel)channel;
             thread.getManager().setLocked(true).setArchived(true).queue();;
