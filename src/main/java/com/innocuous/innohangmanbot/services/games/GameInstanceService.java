@@ -289,7 +289,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         MessageChannel channel = GetMessageChannel(instance);
         if (channel == null || instance.currentMessageID == 0) return null;
 
-        return channel.retrieveMessageById(instance.currentMessageID).complete();
+        return channel.retrieveMessageById(instance.currentMessageID).onErrorMap(x -> null).complete();
     }
 
     private void CheckTimeouts()

@@ -460,7 +460,8 @@ public class InteractionService
     }
     private void InvokeModuleMethod(Method targetMethod, JDAModuleBase instance, Object[] params)
     {
-        instance.commandInteraction.deferReply().complete();
+        if (instance.commandInteraction != null) instance.interactionHook = instance.commandInteraction.deferReply().complete();
+        else if (instance.componentInteraction != null) instance.interactionHook = instance.componentInteraction.deferReply().complete();
         Thread invocationThread = new Thread(() ->
         {
             try

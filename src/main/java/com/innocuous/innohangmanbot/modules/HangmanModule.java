@@ -64,8 +64,8 @@ public class HangmanModule extends JDAModuleBase
             return;
         }
 
-        InteractionHook hook = commandInteraction.reply("Creating game!").complete();
-        Message message = hook.retrieveOriginal().completeAfter(100L, TimeUnit.MILLISECONDS);
+        interactionHook.sendMessage("Creating game!").complete();
+        Message message = interactionHook.retrieveOriginal().completeAfter(100L, TimeUnit.MILLISECONDS);
         long channelID = commandInteraction.getChannelIdLong();
         long guildID = 0;
 
@@ -119,7 +119,7 @@ public class HangmanModule extends JDAModuleBase
 
         if (guess.length() > 1)
         {
-            commandInteraction.reply(new MessageCreateBuilder()
+            interactionHook.sendMessage(new MessageCreateBuilder()
                     .setEmbeds(new EmbedBuilder()
                             .setTitle(guess + " is correct! Well done!")
                             .setColor(Color.GREEN).build())
@@ -127,7 +127,7 @@ public class HangmanModule extends JDAModuleBase
             return;
         }
 
-        commandInteraction.reply(new MessageCreateBuilder()
+        interactionHook.sendMessage(new MessageCreateBuilder()
                 .setEmbeds(new EmbedBuilder()
                         .setTitle(guess + " is in the word!")
                         .setColor(Color.GREEN).build())
@@ -136,7 +136,7 @@ public class HangmanModule extends JDAModuleBase
 
     private void FailGuess(String message, Boolean ephemeral)
     {
-        commandInteraction.reply(new MessageCreateBuilder()
+        interactionHook.sendMessage(new MessageCreateBuilder()
                 .setEmbeds(new EmbedBuilder()
                         .setTitle(message)
                         .setColor(Color.RED).build())
@@ -155,14 +155,16 @@ public class HangmanModule extends JDAModuleBase
 
         //End the game
         _hangmanService.EndGame(GetGameID(), HangmanStatus.Cancelled);
-        commandInteraction.reply("Ending game!").complete().deleteOriginal().queue();
+        interactionHook.sendMessage("Ending game!").complete();
+        interactionHook.deleteOriginal().queue();
     }
 
     //Game Setup Page
     @StringSelectComponent(customID = "hangman.select-category")
     public void SelectWordCategory(List<String> selectedCategory)
     {
-        componentInteraction.reply("Category Selected!").complete().deleteOriginal().queue();
+        interactionHook.sendMessage("Category Selected!").complete();
+        interactionHook.deleteOriginal().queue();
         String selected = selectedCategory.get(0);
         _hangmanService.UpdateGameCategory(GetGameID(), selected);
         if (componentInteraction.isFromGuild())
@@ -175,14 +177,16 @@ public class HangmanModule extends JDAModuleBase
     @ButtonComponent(customID = "hangman.start-game")
     public void StartGameButton()
     {
-        componentInteraction.reply("Starting game!").complete().deleteOriginal().queue();
+        interactionHook.sendMessage("Starting game!").complete();
+        interactionHook.deleteOriginal().queue();
         _hangmanService.StartGame(GetGameID());
     }
 
     @ButtonComponent(customID = "hangman.cancel-game")
     public void CancelGameButton()
     {
-        componentInteraction.reply("Ending game!").complete().deleteOriginal().queue();
+        interactionHook.sendMessage("Ending game!").complete();
+        interactionHook.deleteOriginal().queue();
         _hangmanService.EndGame(GetGameID(), HangmanStatus.Cancelled);
 
     }
@@ -192,13 +196,15 @@ public class HangmanModule extends JDAModuleBase
     public void PlayAgainButton()
     {
         _hangmanService.PlayAgain(GetGameID());
-        componentInteraction.reply("Playing again!").complete().deleteOriginal().queue();
+        interactionHook.sendMessage("Playing again!").complete();
+        interactionHook.deleteOriginal().queue();
     }
 
     @ButtonComponent(customID = "hangman.playagain:no")
     public void DontPlayAgainButton()
     {
-        componentInteraction.reply("Ending instance!").complete().deleteOriginal().queue();
+        interactionHook.sendMessage("Ending instance!").complete();
+        interactionHook.deleteOriginal().queue();
         _hangmanService.DontPlayAgain(GetGameID());
 
         if (componentInteraction.isFromGuild())
