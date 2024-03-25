@@ -146,9 +146,9 @@ public class HangmanBot
 
         //Shutdown JDA
         _logger.Log(new LogMessage(this, "Shutting down JDA"));
-        instance.shutdown();
         try
         {
+            instance.setStatus(OnlineStatus.OFFLINE);
             instance.shutdown();
         }
         catch (Exception ex)
