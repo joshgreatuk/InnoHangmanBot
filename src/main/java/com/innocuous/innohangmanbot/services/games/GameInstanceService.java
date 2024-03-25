@@ -170,8 +170,8 @@ public class GameInstanceService extends InnoService implements IInitializable, 
             return;
         }
 
-        Member selfMember = guild.getMember(jda.getSelfUser());
-        if (selfMember == null)
+        Member selfMember = guild != null ? guild.getMember(jda.getSelfUser()) : null;
+        if (guild != null && selfMember == null)
         {
             _logger.Log(new LogMessage(this, "Bot is not a member of guild anymore, closing instance '" + instanceID + "'", LogSeverity.Debug));
             CloseInstance(instanceID);
