@@ -460,6 +460,7 @@ public class InteractionService
     }
     private void InvokeModuleMethod(Method targetMethod, JDAModuleBase instance, Object[] params)
     {
+        instance.commandInteraction.deferReply().complete();
         Thread invocationThread = new Thread(() ->
         {
             try
@@ -469,7 +470,8 @@ public class InteractionService
             catch (IllegalAccessException | InvocationTargetException e)
             {
                 _logger.Log(new LogMessage(this, "Module '" + instance.getClass().getName() + "' threw exception", LogSeverity.Error, e));
-                if (instance.commandInteraction != null) instance.commandInteraction.reply("An error occured").setEphemeral(true).queue();
+                if (instance.commandInteraction != null && instance.commandInteraction.isAcknowledged())
+                    instance.commandInteraction.reply("An error occurred").setEphemeral(true).queue();
             }
         });
         invocationThread.start();

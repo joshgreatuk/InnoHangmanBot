@@ -57,6 +57,7 @@ public class HangmanBot
         SLF4JBridgeAppender.logger = _logger;
         DefaultShardManagerBuilder client = _services.GetService(DefaultShardManagerBuilder.class);
         client.setEnableShutdownHook(false);
+        client.setStatus(OnlineStatus.IDLE);
 
         String botToken = _config.debugMode ? _config.debugBotToken : _config.releaseBotToken;
         client.setToken(botToken);
@@ -69,12 +70,14 @@ public class HangmanBot
             listenerServices.add(_services.GetService(InteractionService.class));
             for (Object listener : listenerServices) { client.addEventListeners(listener); }
 
-            client.setStatus(OnlineStatus.ONLINE);
+
 
             ShardManager instance = _services.GetService(ShardManager.class);
             Log(new LogMessage(this, "Bot running with "+instance.getShardsTotal()+" shards"));
 
             _services.GetService(HangmanService.class);
+
+            instance.setStatus(OnlineStatus.ONLINE);
 
             // wait();
             // instance.awaitShutdown();
@@ -119,6 +122,8 @@ public class HangmanBot
     public void Shutdown()
     {
         _logger.Log(new LogMessage(this, "Starting shutdown"));
+        ShardManager instance = _services.GetService(ShardManager.class);
+        instance.setStatus(OnlineStatus.IDLE);
 
         //Shutdown services
         for (Object service : _services.GetActiveServices())
@@ -141,7 +146,6 @@ public class HangmanBot
 
         //Shutdown JDA
         _logger.Log(new LogMessage(this, "Shutting down JDA"));
-        ShardManager instance = _services.GetService(ShardManager.class);
         instance.shutdown();
         try
         {

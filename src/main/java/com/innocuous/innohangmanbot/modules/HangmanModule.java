@@ -44,6 +44,7 @@ public class HangmanModule extends JDAModuleBase
                 Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.CREATE_PUBLIC_THREADS, Permission.MESSAGE_EMBED_LINKS))
         {
             FailGuess("Bot needs VIEW_CHANNEL, MESSAGE_SEND, MESSAGE_SEND_IN_THREADS, CREATE_PUBLIC_THREADS and MESSAGE_EMBED_LINKS", true);
+            return;
         }
 
         if (commandInteraction.getChannelType().isThread())
