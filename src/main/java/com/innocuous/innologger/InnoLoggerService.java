@@ -45,13 +45,7 @@ public class InnoLoggerService implements ILogger
         System.out.print(ParseLogMessage(message, true, true));
         try
         {
-            writer.write(ParseLogMessage(message, false, _config.logFilePadding));
-
-            if (message.exception.isPresent())
-            {
-               //throw new RuntimeException(message.exception.get());
-            }
-
+            writer.append(ParseLogMessage(message, false, _config.logFilePadding));
             writer.flush();
         }
         catch (Exception ex) { throw new RuntimeException(ex); }
@@ -150,7 +144,7 @@ public class InnoLoggerService implements ILogger
             }
 
             Files.createFile(Paths.get(path));
-            writer = new FileWriter(path);
+            writer = new FileWriter(path, true);
             Log(new LogMessage(this, "Log opened, hi! :D"));
         }
         catch (Exception ex) { throw new RuntimeException(ex); };

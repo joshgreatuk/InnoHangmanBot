@@ -9,16 +9,22 @@ import com.innocuous.innologger.LogSeverity;
 import net.bytebuddy.asm.Advice;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 import org.apache.commons.collections4.Get;
 
 import java.time.LocalDate;
@@ -63,9 +69,10 @@ public class GameInstanceService extends InnoService implements IInitializable, 
     {
         jda = readyEvent.getJDA();
 
-        for (GameInstance instance : _data.instances.values())
+        List<String> instanceIDs = _data.instances.values().stream().map(x -> x.instanceID).toList();
+        for (String instanceID : instanceIDs)
         {
-            RefreshInstance(instance.instanceID);
+            RefreshInstance(instanceID);
         }
     }
 
@@ -113,7 +120,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         if (instance == null) return;
 
         _data.instances.remove(instanceID);
-        _logger.Log(new LogMessage(this, "Instance '" + instanceID + "' closed", LogSeverity.Verbose));
+        _logger.Log(new LogMessage(this, "Instance '" + instanceID + "' closed", LogSeverity.Debug));
 
         Message message = GetMessage(instance);
         if (message == null) return;
@@ -138,7 +145,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
                         .setComponents(Collections.emptyList())
                         .setEmbeds(embeds)
                         .setReplace(true)
-                .build()).queue();
+                .build()).complete();
     }
 
     public void RefreshInstance(String instanceID)
@@ -153,10 +160,29 @@ public class GameInstanceService extends InnoService implements IInitializable, 
             return;
         }
 
+        Guild guild = jda.getGuildById(instance.guildID);
         MessageChannel channel = GetMessageChannel(instance);
-        if (channel == null)
+        if (channel == null || (instance.guildID != 0 && guild == null))
         {
             _logger.Log(new LogMessage(this, "Guild and/or Channel don't exist, closing instance '" + instanceID + "'", LogSeverity.Debug));
+            CloseInstance(instanceID);
+            return;
+        }
+
+        Member selfMember = guild.getMember(jda.getSelfUser());
+        if (selfMember == null)
+        {
+            _logger.Log(new LogMessage(this, "Bot is not a member of guild anymore, closing instance '" + instanceID + "'", LogSeverity.Debug));
+            CloseInstance(instanceID);
+            return;
+        }
+
+        //Check we have channel permissions
+        if (instance.guildID != 0 && !PermissionUtil.checkPermission(((GuildChannel)channel).getPermissionContainer(),
+                selfMember,
+                Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.VIEW_CHANNEL))
+        {
+            _logger.Log(new LogMessage(this, "Bot does not have send permissions in channel, closing instance '" + instanceID + "'", LogSeverity.Debug));
             CloseInstance(instanceID);
             return;
         }
@@ -169,11 +195,11 @@ public class GameInstanceService extends InnoService implements IInitializable, 
             Message existingMessage = GetMessage(instance);
             if (_config.removeOldMessages && existingMessage != null)
             {
-                channel.deleteMessageById(instance.currentMessageID).queue();
+                channel.deleteMessageById(instance.currentMessageID).complete();
             }
             else if (!_config.removeOldMessages && existingMessage != null)
             {
-                existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.apply(instance).build())).queue();
+                existingMessage.editMessage(MessageEditData.fromCreateData(instance.messageSupplier.apply(instance).build())).complete();
                 return;
             }
             instance.currentMessageID = 0L;
@@ -267,6 +293,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
 
     private void CheckTimeouts()
     {
+        _logger.Log(new LogMessage(this, "Checking timeouts", LogSeverity.Debug));
         List<String> ids = _data.instances.values().stream()
                 .filter(x -> x.lastInteracted.plusMinutes(_config.timeoutMinutes).isBefore(LocalDateTime.now()))
                 .map(x -> x.instanceID).toList();

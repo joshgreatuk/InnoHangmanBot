@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -22,6 +23,7 @@ import net.dv8tion.jda.internal.utils.PermissionUtil;
 
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class HangmanModule extends JDAModuleBase
 {
@@ -37,7 +39,7 @@ public class HangmanModule extends JDAModuleBase
     public void SetupGameCommand()
     {
         if (commandInteraction.isFromGuild() && !PermissionUtil.checkPermission(
-                (IPermissionContainer) commandInteraction.getChannel(),
+                commandInteraction.getGuildChannel().getPermissionContainer(),
                 commandInteraction.getGuild().getMember(commandInteraction.getJDA().getSelfUser()),
                 Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.CREATE_PUBLIC_THREADS))
         {
@@ -62,7 +64,7 @@ public class HangmanModule extends JDAModuleBase
         }
 
         InteractionHook hook = commandInteraction.reply("Creating game!").complete();
-        Message message = hook.retrieveOriginal().complete();
+        Message message = hook.retrieveOriginal().completeAfter(100L, TimeUnit.MILLISECONDS);
         long channelID = commandInteraction.getChannelIdLong();
         long guildID = 0;
 
@@ -120,7 +122,7 @@ public class HangmanModule extends JDAModuleBase
                     .setEmbeds(new EmbedBuilder()
                             .setTitle(guess + " is correct! Well done!")
                             .setColor(Color.GREEN).build())
-                    .build()).queue();
+                    .build()).complete();
             return;
         }
 
@@ -128,7 +130,7 @@ public class HangmanModule extends JDAModuleBase
                 .setEmbeds(new EmbedBuilder()
                         .setTitle(guess + " is in the word!")
                         .setColor(Color.GREEN).build())
-                .build()).queue();
+                .build()).complete();
     }
 
     private void FailGuess(String message, Boolean ephemeral)

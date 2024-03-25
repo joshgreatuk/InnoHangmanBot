@@ -7,7 +7,7 @@ public class LogMessage
     public String sender;
     public String message;
     public LogSeverity severity;
-    public Optional<Exception> exception;
+    public Optional<Throwable> exception;
     public Optional<String> bridge = Optional.empty();
 
     public LogMessage(Object sender, String message)
@@ -20,9 +20,9 @@ public class LogMessage
     public LogMessage(String sender, String message, LogSeverity severity)
     { this(sender, message, severity, null); }
 
-    public LogMessage(Object sender, String message, LogSeverity severity, Exception exception)
+    public LogMessage(Object sender, String message, LogSeverity severity, Throwable exception)
     { this(sender.getClass().getName(), message, severity, exception); }
-    public LogMessage(String sender, String message, LogSeverity severity, Exception exception)
+    public LogMessage(String sender, String message, LogSeverity severity, Throwable exception)
     {
         this.sender = sender;
         this.message = message;

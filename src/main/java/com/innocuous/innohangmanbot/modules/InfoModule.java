@@ -31,7 +31,8 @@ public class InfoModule extends JDAModuleBase
     public void Info()
     {
         String infoDescription = "**Author:** innocuousuk\n" +
-                        "**Version:** 1.0";
+                        "**Version:** 1.1\n" +
+                        "**Top.gg Link:** https://top.gg/bot/1218936835506573433";
 
         commandInteraction.reply(new MessageCreateBuilder()
                         .addEmbeds(new EmbedBuilder()

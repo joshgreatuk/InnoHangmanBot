@@ -44,8 +44,10 @@
     - [x] Add Timeout
   - [x] HangmanService
     - [x] Add Game Limits
-    - [x] Add DMs support
+    - [x] Add DMs Support
   - [x] Add Game Settings To Config
+  - [ ] Fix DMs Support
+  - [ ] Add Links to /info
 - [ ] DataSystem (Want) (Use configs first)
   - [ ] DataService
   - [x] Database (abstract)

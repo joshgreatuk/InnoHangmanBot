@@ -460,26 +460,19 @@ public class InteractionService
     }
     private void InvokeModuleMethod(Method targetMethod, JDAModuleBase instance, Object[] params)
     {
-        try
+        Thread invocationThread = new Thread(() ->
         {
-            Thread invocationThread = new Thread(() ->
+            try
             {
-                try
-                {
-                    targetMethod.invoke(instance, params);
-                }
-                catch (IllegalAccessException | InvocationTargetException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            });
-            invocationThread.start();
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(new LogMessage(this, "Module '" + instance.getClass().getName() + "' threw exception", LogSeverity.Error, ex));
-            if (instance.commandInteraction != null) instance.commandInteraction.reply("An error occured").setEphemeral(true).queue();
-        }
+                targetMethod.invoke(instance, params);
+            }
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                _logger.Log(new LogMessage(this, "Module '" + instance.getClass().getName() + "' threw exception", LogSeverity.Error, e));
+                if (instance.commandInteraction != null) instance.commandInteraction.reply("An error occured").setEphemeral(true).queue();
+            }
+        });
+        invocationThread.start();
     }
 
     private <T> T InstantiateModule(Class<?> moduleClass)

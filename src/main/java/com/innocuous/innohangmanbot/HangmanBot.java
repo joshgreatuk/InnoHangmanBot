@@ -54,6 +54,7 @@ public class HangmanBot
         _config = _services.GetService(HangmanBotConfig.class);
         _config.Init();
         _logger = _services.GetService(InnoLoggerService.class);
+        SLF4JBridgeAppender.logger = _logger;
         DefaultShardManagerBuilder client = _services.GetService(DefaultShardManagerBuilder.class);
         client.setEnableShutdownHook(false);
 

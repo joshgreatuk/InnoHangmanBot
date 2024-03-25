@@ -76,12 +76,12 @@ public class HangmanService extends InnoService
         //Remember to process All and Random separately
         if (category.equals("Random Category"))
         {
-            category = _config.categories[_random.nextInt(_config.categories.length-2)+2].name;
+            category = _config.categories[_random.nextInt(2, _config.categories.length)].name;
         }
 
         String finalCategory = category;
-        Optional<WordCategory> wordCategory = Arrays.stream(_config.categories).filter(x -> x.name.equals(finalCategory)).findFirst();
-        List<String> wordList = Arrays.stream(wordCategory.get().wordList).toList();
+        WordCategory wordCategory = Arrays.stream(_config.categories).filter(x -> x.name.equals(finalCategory)).toList().get(0);
+        List<String> wordList = Arrays.stream(wordCategory.wordList).toList();
 
         if (category.equals("All Categories"))
         {
@@ -272,7 +272,9 @@ public class HangmanService extends InnoService
         return new MessageCreateBuilder()
                 .addEmbeds(new EmbedBuilder()
                         .setTitle("Thanks for playing!")
-                        .setDescription("Thread has been locked")
+                        .setDescription("It would be really appreciated if you took a moment to vote for and leave a " +
+                                "review for the bot at: https://top.gg/bot/1218936835506573433")
+                        .setFooter("Thread has been locked")
                         .setColor(Color.GRAY)
                         .build());
     }
