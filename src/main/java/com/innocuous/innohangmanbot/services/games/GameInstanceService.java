@@ -122,6 +122,10 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         _data.instances.remove(instanceID);
         _logger.Log(new LogMessage(this, "Instance '" + instanceID + "' closed", LogSeverity.Debug));
 
+        MessageChannel channel = GetMessageChannel(instance);
+        ThreadChannel thread = (ThreadChannel) channel;
+        if (thread != null && thread.isArchived()) return;
+
         Message message = GetMessage(instance);
         if (message == null) return;
 
