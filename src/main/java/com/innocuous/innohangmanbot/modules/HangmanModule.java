@@ -41,9 +41,9 @@ public class HangmanModule extends JDAModuleBase
         if (commandInteraction.isFromGuild() && !PermissionUtil.checkPermission(
                 commandInteraction.getGuildChannel().getPermissionContainer(),
                 commandInteraction.getGuild().getMember(commandInteraction.getJDA().getSelfUser()),
-                Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.CREATE_PUBLIC_THREADS))
+                Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.CREATE_PUBLIC_THREADS, Permission.MESSAGE_EMBED_LINKS))
         {
-            FailGuess("Bot needs VIEW_CHANNEL, MESSAGE_SEND, MESSAGE_SEND_IN_THREADS and CREATE_PUBLIC_THREADS", true);
+            FailGuess("Bot needs VIEW_CHANNEL, MESSAGE_SEND, MESSAGE_SEND_IN_THREADS, CREATE_PUBLIC_THREADS and MESSAGE_EMBED_LINKS", true);
         }
 
         if (commandInteraction.getChannelType().isThread())

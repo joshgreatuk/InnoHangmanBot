@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2e9be07-b916-4683-8f8d-5d3a1df6896c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/SLF4JBridgeAppender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/HangmanBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/ToDo.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/modules/HangmanModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/modules/HangmanModule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/modules/InfoModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/modules/InfoModule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/games/GameInstanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/games/GameInstanceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/HangmanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innohangmanbot/services/hangman/HangmanService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/InnoLoggerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/LogMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/innologger/LogMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innocuous/jdamodulesystem/InteractionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,9 +87,10 @@
     "Gradle.InnoHangmanBot [test].executor": "Run",
     "Gradle.InnoHangmanBot.executor": "Run",
     "JAR Application.Execute InnoHangmanBot-1.0-all.jar.executor": "Run",
-    "JAR Application.Execute InnoHangmanBot-1.1-all.jar.executor": "Debug",
+    "JAR Application.Execute InnoHangmanBot-1.1-all.jar.executor": "Run",
+    "JAR Application.Execute InnoHangmanBot-1.2-all.jar.executor": "Run",
     "JAR Application.InnoHangmanBot-1.0-all.jar.executor": "Run",
-    "JUnit.JUnit Tests.executor": "Debug",
+    "JUnit.JUnit Tests.executor": "Run",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
@@ -130,7 +123,7 @@
       <recent name="com.innocuous.innoconfig" />
     </key>
   </component>
-  <component name="RunManager" selected="JAR Application.Execute InnoHangmanBot-1.1-all.jar">
+  <component name="RunManager" selected="JAR Application.Execute InnoHangmanBot-1.2-all.jar">
     <configuration name="Build InnoHangmanBot" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -215,8 +208,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Execute InnoHangmanBot-1.1-all.jar" type="JarApplication">
-      <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/InnoHangmanBot-1.1-all.jar" />
+    <configuration name="Execute InnoHangmanBot-1.2-all.jar" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/InnoHangmanBot-1.2-all.jar" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <method v="2">
         <option name="RunConfigurationTask" enabled="true" run_configuration_name="JUnit Tests" run_configuration_type="JUnit" />
@@ -227,7 +220,7 @@
       <item itemvalue="Gradle.Build InnoHangmanBot" />
       <item itemvalue="Gradle.InnoConfigBaseTest.loadFile" />
       <item itemvalue="Gradle.InnoConfigBaseTest.saveFile" />
-      <item itemvalue="JAR Application.Execute InnoHangmanBot-1.1-all.jar" />
+      <item itemvalue="JAR Application.Execute InnoHangmanBot-1.2-all.jar" />
       <item itemvalue="JUnit.JUnit Tests" />
     </list>
     <recent_temporary>

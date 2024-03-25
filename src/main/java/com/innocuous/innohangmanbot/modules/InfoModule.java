@@ -31,8 +31,11 @@ public class InfoModule extends JDAModuleBase
     public void Info()
     {
         String infoDescription = "**Author:** innocuousuk\n" +
-                        "**Version:** 1.1\n" +
-                        "**Top.gg Link:** https://top.gg/bot/1218936835506573433";
+                        "**Version:** 1.2\n" +
+                        "**Top.gg Link:** https://top.gg/bot/1218936835506573433\n" +
+                        "**Terms and Conditions:** https://docs.google.com/document/d/1V0gU7a-HhfPztBeHHKhrE8VfFcQjPtieFsO5p7f547o/edit?usp=sharing\n" +
+                        "**Privacy Policy:** https://docs.google.com/document/d/1d74GjvS9VIlH3exd_zFJ4i9GjWu_cX0g6Bts7W7Koqw/edit\n" +
+                        "**Support Discord Server:** https://discord.gg/hM4K2qxqgb";
 
         commandInteraction.reply(new MessageCreateBuilder()
                         .addEmbeds(new EmbedBuilder()

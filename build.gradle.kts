@@ -6,7 +6,7 @@ plugins {
 
 application.mainClass = "com.innocuous.innohangmanbot.HangmanBot"
 group = "com.innocuous"
-version = "1.1"
+version = "1.2"
 
 val jdaVersion = "5.0.0-beta.20"
 val jacksonVersion = "2.17.0-rc1"

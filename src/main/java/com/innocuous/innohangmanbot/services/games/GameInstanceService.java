@@ -157,6 +157,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         if (instance.messageSupplier == null)
         {
             _logger.Log(new LogMessage(this, "Instance '" + instanceID + "' messageSupplier is null", LogSeverity.Error));
+            CloseInstance(instanceID);
             return;
         }
 
@@ -180,7 +181,7 @@ public class GameInstanceService extends InnoService implements IInitializable, 
         //Check we have channel permissions
         if (instance.guildID != 0 && !PermissionUtil.checkPermission(((GuildChannel)channel).getPermissionContainer(),
                 selfMember,
-                Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.VIEW_CHANNEL))
+                Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.MESSAGE_EMBED_LINKS, Permission.VIEW_CHANNEL))
         {
             _logger.Log(new LogMessage(this, "Bot does not have send permissions in channel, closing instance '" + instanceID + "'", LogSeverity.Debug));
             CloseInstance(instanceID);

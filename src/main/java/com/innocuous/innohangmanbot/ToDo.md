@@ -47,7 +47,7 @@
     - [x] Add DMs Support
   - [x] Add Game Settings To Config
   - [ ] Fix DMs Support
-  - [ ] Add Links to /info
+  - [x] Add Links to /info
 - [ ] DataSystem (Want) (Use configs first)
   - [ ] DataService
   - [x] Database (abstract)
